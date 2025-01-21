@@ -1,0 +1,30 @@
+@startuml CategoryValidator
+  title CategoryValidator Code
+
+  package "catalog.domain" {
+    class "CategoryValidator" as CategoryValidator {
+      - category:Category [0..1]
+      + validate()
+    }
+
+    class "Validator" as Validator {
+      - validationHandler:ValidationHandler [0..1]
+      + validate()
+      # validationHandler(): ValidationHandler
+    }
+
+    class "Nofication" as Notification {
+      - errors: List<Error> [0..*]
+      + append(anError: Error): ValidationHandler
+      + append(aValidationHandler: ValidationHandler): ValidationHanler
+      + create(): Nofication
+      + validate(aValidation: Validation): ValidationHandler
+    }
+
+    class "Error" as Error {}
+  }
+
+  CategoryValidator --> Validator
+  Validator -- Notification : validationHandler [0..1]
+  Notification --> Error : errors [0..*]
+@enduml
