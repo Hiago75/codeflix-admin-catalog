@@ -7,7 +7,7 @@
       + validate()
     }
 
-    class "Validator" as Validator {
+    abstract class "Validator" as Validator {
       - validationHandler:ValidationHandler [0..1]
       + validate()
       # validationHandler(): ValidationHandler
