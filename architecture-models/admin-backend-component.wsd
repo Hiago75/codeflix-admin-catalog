@@ -1,0 +1,25 @@
+@startuml Admin API Back-end Component
+!include https://raw.githubusercontent.com/plantuml-stdlib/C4-PlantUML/master/C4_Container.puml
+AddRelTag("async", $lineStyle = DashedLine())
+SHOW_PERSON_PORTRAIT()
+
+title "Codeflix"
+
+System(front_end_catalogo, "Front-end admin do catálogo de vídeos", "SPA que gerencia os vídeos, incluindo as categorias e gêneros")
+System(encoder, "Encoder de videos", "Realiza os encoding dos vídeos para mpeg-dash")
+System(kafka_connect, "Kafka Connect", "Serviço de replicação de dados do catálogo")
+System_Boundary(gateway, "Back-end: Admin do catálogo de vídeos") {
+  Container(admin_back_end, "App", "Linguagem livre", "Sistema que gerencia os vídeos, incluindo as categorias e gêneros")
+
+  Rel(front_end_catalogo, admin_back_end, "Interage com via" , "HTTPS")
+  Rel(encoder, admin_back_end, "Consome dados do video convertido via", "Fila: videos.converted", $tags = "async")
+  Rel(admin_back_end, encoder, "Publica dados do vídeo recém-criado via", "Fila: videos.new", $tags = "async")
+
+  Container(video_bucket, "Bucket de videos", "Google Cloud Storage", "Armazena os vídeos brutos")
+  ContainerDb(Database, "Banco de dados", "MySQL", "Armazena os dados do catálogo")
+
+  Rel(admin_back_end, Database, "Interage com via", "SQL")
+  Rel(admin_back_end, video_bucket, "Faz upload de vídeo via", "HTTPS")
+  Rel(kafka_connect, Database, "Copia dados usando connector", "Debezium MySQL")
+}
+@enduml
