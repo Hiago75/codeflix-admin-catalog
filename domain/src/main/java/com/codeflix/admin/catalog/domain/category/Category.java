@@ -77,6 +77,10 @@ public class Category extends AggregateRoot<CategoryID> {
       return this;
    }
 
+   public CategoryID getId() {
+      return id;
+   }
+
    public String getName() {
       return name;
    }
