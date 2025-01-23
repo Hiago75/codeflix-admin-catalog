@@ -2,9 +2,13 @@ package com.codeflix.admin.catalog.application.category.create;
 
 import com.codeflix.admin.catalog.domain.category.Category;
 import com.codeflix.admin.catalog.domain.category.CategoryGateway;
-import com.codeflix.admin.catalog.domain.validation.handler.ThrowsValidationHandler;
+import com.codeflix.admin.catalog.domain.validation.handler.Notification;
+import io.vavr.control.Either;
 
 import java.util.Objects;
+
+import static io.vavr.API.Left;
+import static io.vavr.API.Try;
 
 public class DefaultCreateCategoryUseCase extends CreateCategoryUseCase{
     private final CategoryGateway categoryGateway;
@@ -14,12 +18,18 @@ public class DefaultCreateCategoryUseCase extends CreateCategoryUseCase{
     }
 
     @Override
-    public CreateCategoryOutput execute(final CreateCategoryCommand aCommand) {
+    public Either<Notification, CreateCategoryOutput> execute(final CreateCategoryCommand aCommand) {
+        final var notification = Notification.create();
+
         final var aCategory = Category.newCategory(aCommand.name(), aCommand.description(), aCommand.isActive());
-        aCategory.validate(new ThrowsValidationHandler());
+        aCategory.validate(notification);
 
-        this.categoryGateway.create(aCategory);
+        return notification.hasErrors() ? Left(notification) : create(aCategory);
+    }
 
-        return CreateCategoryOutput.from(aCategory);
+    private Either<Notification, CreateCategoryOutput> create(final Category aCategory) {
+        return Try(() -> this.categoryGateway.create(aCategory))
+                .toEither()
+                .bimap(Notification::create, CreateCategoryOutput::from);
     }
 }
