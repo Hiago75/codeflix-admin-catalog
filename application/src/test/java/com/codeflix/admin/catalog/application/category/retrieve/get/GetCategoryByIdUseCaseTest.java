@@ -1,7 +1,5 @@
-package com.codeflix.admin.catalog.application.category.retrieve;
+package com.codeflix.admin.catalog.application.category.retrieve.get;
 
-import com.codeflix.admin.catalog.application.category.retrieve.get.CategoryOutput;
-import com.codeflix.admin.catalog.application.category.retrieve.get.DefaultGetCategoryByIdUseCase;
 import com.codeflix.admin.catalog.domain.category.Category;
 import com.codeflix.admin.catalog.domain.category.CategoryGateway;
 import com.codeflix.admin.catalog.domain.category.CategoryID;
