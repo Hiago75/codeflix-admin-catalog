@@ -1,3 +1,10 @@
+server:
+  port: 8080
+  undertow:
+    threads:
+      worker: 32
+      io: 4
+
 mysql:
   username: root
   password: 123456
