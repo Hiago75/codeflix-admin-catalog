@@ -119,4 +119,50 @@ public class CategoryMySQLGatewayTest {
 
         assertEquals(0, categoryRepository.count());
     }
+
+    @Test
+    public void givenAPrePersistedCategoryAndValidCategoryID_whenCallsGetById_shouldReturnCategory() {
+        final var expectedName = "Movies";
+        final var expectedDescription = "The most watched category";
+        final var expectedIsActive = true;
+
+        final var aCategory = Category.newCategory(expectedName, expectedDescription, expectedIsActive);
+
+        assertEquals(0, categoryRepository.count());
+
+        categoryRepository.saveAndFlush(CategoryJpaEntity.from(aCategory));
+
+        assertEquals(1, categoryRepository.count());
+
+        final var actualCategory  = categoryGateway.findById(aCategory.getId()).get();
+
+        assertEquals(1, categoryRepository.count());
+
+        assertEquals(aCategory.getId(), actualCategory.getId());
+        assertEquals(expectedName, actualCategory.getName());
+        assertEquals(expectedDescription, actualCategory.getDescription());
+        assertEquals(expectedIsActive, actualCategory.isActive());
+        assertEquals(aCategory.getCreatedAt(), actualCategory.getCreatedAt());
+        assertEquals(aCategory.getUpdatedAt(), actualCategory.getUpdatedAt());
+        assertNull(actualCategory.getDeletedAt());
+
+        final var actualEntity = categoryRepository.findById(aCategory.getId().getValue()).get();
+
+        assertEquals(aCategory.getId().getValue(), actualEntity.getId());
+        assertEquals(expectedName, actualEntity.getName());
+        assertEquals(expectedDescription, actualEntity.getDescription());
+        assertEquals(expectedIsActive, actualEntity.isActive());
+        assertEquals(aCategory.getCreatedAt(), actualEntity.getCreatedAt());
+        assertEquals(aCategory.getUpdatedAt(), actualEntity.getUpdatedAt());
+        assertNull(actualEntity.getDeletedAt());
+    }
+
+    @Test
+    public void givenAValidNotStoredCategoryID_whenCallsGetById_shouldReturnEmpty() {
+        assertEquals(0, categoryRepository.count());
+
+        final var actualCategory = categoryGateway.findById(CategoryID.from("Empty"));
+
+        assertTrue(actualCategory.isEmpty());
+    }
 }
