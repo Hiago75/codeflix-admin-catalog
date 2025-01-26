@@ -31,12 +31,32 @@ public class Category extends AggregateRoot<CategoryID> implements Cloneable{
       this.deletedAt = aDeleteDate;
    }
 
+   public static Category with(
+           final CategoryID id,
+           final String name,
+           final String description,
+           final boolean active,
+           final Instant createdAt,
+           final Instant updatedAt,
+           final Instant deletedAt
+   ) {
+      return new Category(
+              id,
+              name,
+              description,
+              active,
+              createdAt,
+              updatedAt,
+              deletedAt
+      );
+   }
+
    public static Category newCategory(final String aName, final String aDescription, final boolean isActive) {
       final var id = CategoryID.unique();
       final var now = Instant.now();
       final var deletedAt = isActive ? null : now;
 
-      return new Category(id, aName, aDescription, isActive, now, now, deletedAt);
+      return with(id, aName, aDescription, isActive, now, now, deletedAt);
    }
 
    @Override
