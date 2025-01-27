@@ -7,10 +7,16 @@ import com.codeflix.admin.catalog.domain.category.CategorySearchQuery;
 import com.codeflix.admin.catalog.domain.pagination.Pagination;
 import com.codeflix.admin.catalog.infrastructure.category.persistance.CategoryJpaEntity;
 import com.codeflix.admin.catalog.infrastructure.category.persistance.CategoryRepository;
+import com.codeflix.admin.catalog.infrastructure.utils.SpecificationUtils;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Sort;
+import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Component;
 
 import java.util.Objects;
 import java.util.Optional;
+
+import static com.codeflix.admin.catalog.infrastructure.utils.SpecificationUtils.like;
 
 @Component
 public class CategoryMySQLGateway implements CategoryGateway {
@@ -30,7 +36,7 @@ public class CategoryMySQLGateway implements CategoryGateway {
     }
 
     @Override
-    public void deleteById(CategoryID anId) {
+    public void deleteById(final CategoryID anId) {
         final var anIdValue = anId.getValue();
 
         if (this.repository.existsById(anIdValue)) {
@@ -39,7 +45,7 @@ public class CategoryMySQLGateway implements CategoryGateway {
     }
 
     @Override
-    public Optional<Category> findById(CategoryID anId) {
+    public Optional<Category> findById(final CategoryID anId) {
         return this.repository.findById(anId.getValue())
                 .map(CategoryJpaEntity::toAggregate);
     }
@@ -50,7 +56,32 @@ public class CategoryMySQLGateway implements CategoryGateway {
     }
 
     @Override
-    public Pagination<Category> findAll(CategorySearchQuery aQuery) {
-        return null;
+    public Pagination<Category> findAll(final CategorySearchQuery aQuery) {
+        final var page = PageRequest.of(
+                aQuery.page(),
+                aQuery.perPage(),
+                Sort.by(Sort.Direction.fromString(aQuery.direction()), aQuery.sort())
+        );
+
+        final var specifications = Optional.ofNullable(aQuery.terms())
+                .filter(str -> !str.isBlank())
+                .map(this::assembleSpecification)
+                .orElse(null);
+
+        final var pageResult =
+                this.repository.findAll(Specification.where(specifications), page);
+
+        return new Pagination<>(
+                pageResult.getNumber(),
+                pageResult.getSize(),
+                pageResult.getTotalElements(),
+                pageResult.map(CategoryJpaEntity::toAggregate).toList()
+        );
+    }
+
+    private Specification<CategoryJpaEntity> assembleSpecification(final String str) {
+        final Specification<CategoryJpaEntity> nameLike = like("name", str);
+        final Specification<CategoryJpaEntity> descriptionLike = like("description", str);
+        return nameLike.or(descriptionLike);
     }
 }
