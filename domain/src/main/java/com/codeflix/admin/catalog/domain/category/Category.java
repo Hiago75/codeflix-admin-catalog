@@ -4,6 +4,7 @@ import com.codeflix.admin.catalog.domain.AggregateRoot;
 import com.codeflix.admin.catalog.domain.validation.ValidationHandler;
 
 import java.time.Instant;
+import java.time.temporal.ChronoUnit;
 import java.util.Objects;
 
 public class Category extends AggregateRoot<CategoryID> implements Cloneable{
@@ -115,15 +116,19 @@ public class Category extends AggregateRoot<CategoryID> implements Cloneable{
    }
 
    public Instant getCreatedAt() {
-      return createdAt;
+      return createdAt.truncatedTo(ChronoUnit.MICROS);
    }
 
    public Instant getUpdatedAt() {
-      return updatedAt;
+      return updatedAt.truncatedTo(ChronoUnit.MICROS);
    }
 
    public Instant getDeletedAt() {
-      return deletedAt;
+      if (deletedAt != null ){
+         return deletedAt.truncatedTo(ChronoUnit.MICROS);
+      }
+
+      return null;
    }
 
     @Override
