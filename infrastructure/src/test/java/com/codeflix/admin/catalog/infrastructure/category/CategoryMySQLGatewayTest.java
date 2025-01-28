@@ -3,7 +3,7 @@ package com.codeflix.admin.catalog.infrastructure.category;
 import com.codeflix.admin.catalog.domain.category.Category;
 import com.codeflix.admin.catalog.domain.category.CategoryID;
 import com.codeflix.admin.catalog.domain.category.CategorySearchQuery;
-import com.codeflix.admin.catalog.infrastructure.MySQLGatewayTest;
+import com.codeflix.admin.catalog.MySQLGatewayTest;
 import com.codeflix.admin.catalog.infrastructure.category.persistance.CategoryJpaEntity;
 import com.codeflix.admin.catalog.infrastructure.category.persistance.CategoryRepository;
 import org.junit.jupiter.api.Test;
