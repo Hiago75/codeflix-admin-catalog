@@ -92,7 +92,7 @@ public class UpdateCategoryUseCaseTest {
         final var notification = useCase.execute(aCommand).getLeft();
 
         assertEquals(expectedErrorCount, notification.getErrors().size());
-        assertEquals(expectedErrorMessage, notification.getErrors().get(0).Message());
+        assertEquals(expectedErrorMessage, notification.getErrors().get(0).message());
 
         verify(categoryGateway, times(0)).update(any());
     }
@@ -155,7 +155,7 @@ public class UpdateCategoryUseCaseTest {
         final var notification = useCase.execute(aCommand).getLeft();
 
         assertEquals(expectedErrorCount, notification.getErrors().size());
-        assertEquals(expectedErrorMessage, notification.getErrors().get(0).Message());
+        assertEquals(expectedErrorMessage, notification.getErrors().get(0).message());
         verify(categoryGateway, times(1))
                 .update(argThat(updatedCategory -> Objects.equals(expectedName, updatedCategory.getName())
                         && Objects.equals(expectedDescription, updatedCategory.getDescription())
@@ -184,7 +184,7 @@ public class UpdateCategoryUseCaseTest {
         final var actualException = assertThrows(DomainException.class, () -> useCase.execute(aCommand).getLeft());
 
         assertEquals(expectedErrorCount, actualException.getErrors().size());
-        assertEquals(expectedErrorMessage, actualException.getErrors().get(0).Message());
+        assertEquals(expectedErrorMessage, actualException.getErrors().get(0).message());
         verify(categoryGateway, times(1)).findById(eq(CategoryID.from(expectedId)));
         verify(categoryGateway, times(0)).update(any());
     }

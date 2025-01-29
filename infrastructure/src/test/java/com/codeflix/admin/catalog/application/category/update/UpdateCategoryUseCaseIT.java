@@ -3,7 +3,6 @@ package com.codeflix.admin.catalog.application.category.update;
 import com.codeflix.admin.catalog.IntegrationTest;
 import com.codeflix.admin.catalog.domain.category.Category;
 import com.codeflix.admin.catalog.domain.category.CategoryGateway;
-import com.codeflix.admin.catalog.domain.category.CategoryID;
 import com.codeflix.admin.catalog.domain.exceptions.DomainException;
 import com.codeflix.admin.catalog.infrastructure.category.persistance.CategoryJpaEntity;
 import com.codeflix.admin.catalog.infrastructure.category.persistance.CategoryRepository;
@@ -11,13 +10,8 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.mock.mockito.SpyBean;
 
-import java.util.Objects;
-import java.util.Optional;
-
 import static org.junit.jupiter.api.Assertions.*;
-import static org.mockito.AdditionalAnswers.returnsFirstArg;
 import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.Mockito.*;
 
 @IntegrationTest
@@ -82,7 +76,7 @@ public class UpdateCategoryUseCaseIT {
         final var notification = useCase.execute(aCommand).getLeft();
 
         assertEquals(expectedErrorCount, notification.getErrors().size());
-        assertEquals(expectedErrorMessage, notification.getErrors().get(0).Message());
+        assertEquals(expectedErrorMessage, notification.getErrors().get(0).message());
 
         verify(categoryGateway, times(0)).update(any());
     }
@@ -138,7 +132,7 @@ public class UpdateCategoryUseCaseIT {
         final var notification = useCase.execute(aCommand).getLeft();
 
         assertEquals(expectedErrorCount, notification.getErrors().size());
-        assertEquals(expectedErrorMessage, notification.getErrors().get(0).Message());
+        assertEquals(expectedErrorMessage, notification.getErrors().get(0).message());
 
         final var actualCategory = categoryRepository.findById(expectedId.getValue()).get();
 
@@ -164,7 +158,7 @@ public class UpdateCategoryUseCaseIT {
         final var actualException = assertThrows(DomainException.class, () -> useCase.execute(aCommand).getLeft());
 
         assertEquals(expectedErrorCount, actualException.getErrors().size());
-        assertEquals(expectedErrorMessage, actualException.getErrors().get(0).Message());
+        assertEquals(expectedErrorMessage, actualException.getErrors().get(0).message());
     }
 
     private void save(final Category aCategory) {

@@ -38,7 +38,7 @@ public class CategoryTest {
         final var actualException = assertThrows(DomainException.class, () -> actualCategory.validate(new ThrowsValidationHandler()));
 
         assertEquals(expectedErrorCount, actualException.getErrors().size());
-        assertEquals(expectedErrorMessage, actualException.getErrors().get(0).Message());
+        assertEquals(expectedErrorMessage, actualException.getErrors().get(0).message());
     }
 
     @Test
@@ -54,7 +54,7 @@ public class CategoryTest {
         final var actualException = assertThrows(DomainException.class, () -> actualCategory.validate(new ThrowsValidationHandler()));
 
         assertEquals(expectedErrorCount, actualException.getErrors().size());
-        assertEquals(expectedErrorMessage, actualException.getErrors().get(0).Message());
+        assertEquals(expectedErrorMessage, actualException.getErrors().get(0).message());
     }
 
     @Test
@@ -70,7 +70,7 @@ public class CategoryTest {
         final var actualException = assertThrows(DomainException.class, () -> actualCategory.validate(new ThrowsValidationHandler()));
 
         assertEquals(expectedErrorCount, actualException.getErrors().size());
-        assertEquals(expectedErrorMessage, actualException.getErrors().get(0).Message());
+        assertEquals(expectedErrorMessage, actualException.getErrors().get(0).message());
     }
 
     @Test
@@ -86,7 +86,7 @@ public class CategoryTest {
         final var actualException = assertThrows(DomainException.class, () -> actualCategory.validate(new ThrowsValidationHandler()));
 
         assertEquals(expectedErrorCount, actualException.getErrors().size());
-        assertEquals(expectedErrorMessage, actualException.getErrors().get(0).Message());
+        assertEquals(expectedErrorMessage, actualException.getErrors().get(0).message());
     }
 
     @Test

@@ -64,7 +64,7 @@ public class CreateCategoryUseCaseIT {
         final var notification = useCase.execute(aCommand).getLeft();
 
         assertEquals(expectedErrorCount, notification.getErrors().size());
-        assertEquals(expectedErrorMessage, notification.getErrors().get(0).Message());
+        assertEquals(expectedErrorMessage, notification.getErrors().get(0).message());
         assertEquals(0, categoryRepository.count());
         verify(categoryGateway, times(0)).create(any());
     }
@@ -107,6 +107,6 @@ public class CreateCategoryUseCaseIT {
         final var notification = useCase.execute(aCommand).getLeft();
 
         assertEquals(expectedErrorCount, notification.getErrors().size());
-        assertEquals(expectedErrorMessage, notification.getErrors().get(0).Message());
+        assertEquals(expectedErrorMessage, notification.getErrors().get(0).message());
     }
 }
