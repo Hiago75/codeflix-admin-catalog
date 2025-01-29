@@ -1,6 +1,7 @@
 package com.codeflix.admin.catalog.infrastructure.api;
 
 import com.codeflix.admin.catalog.domain.pagination.Pagination;
+import com.codeflix.admin.catalog.infrastructure.category.models.CategoryApiOutput;
 import com.codeflix.admin.catalog.infrastructure.category.models.CreateCategoryApiInput;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
@@ -41,4 +42,13 @@ public interface CategoryAPI {
             @RequestParam(name = "sort", required = false, defaultValue = "name") final String sort,
             @RequestParam(name = "dir", required = false, defaultValue = "asc") final String direction
     );
+
+    @GetMapping(value = "{id}")
+    @Operation(summary = "Get a specific category by its identifier")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "Category retrieved successfully"),
+            @ApiResponse(responseCode = "404", description = "Category was not found"),
+            @ApiResponse(responseCode = "500", description = "An unexpected server error occurred")
+    })
+    CategoryApiOutput getById(@PathVariable(name = "id") String id);
 }
