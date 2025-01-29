@@ -3,21 +3,32 @@ package com.codeflix.admin.catalog.infrastructure.api.controllers;
 import com.codeflix.admin.catalog.application.category.create.CreateCategoryCommand;
 import com.codeflix.admin.catalog.application.category.create.CreateCategoryOutput;
 import com.codeflix.admin.catalog.application.category.create.CreateCategoryUseCase;
+import com.codeflix.admin.catalog.application.category.retrieve.get.GetCategoryByIdUseCase;
 import com.codeflix.admin.catalog.domain.pagination.Pagination;
 import com.codeflix.admin.catalog.domain.validation.handler.Notification;
 import com.codeflix.admin.catalog.infrastructure.api.CategoryAPI;
+import com.codeflix.admin.catalog.infrastructure.category.models.CategoryApiOutput;
 import com.codeflix.admin.catalog.infrastructure.category.models.CreateCategoryApiInput;
-import org.springframework.beans.factory.annotation.Autowired;
+import com.codeflix.admin.catalog.infrastructure.category.presenters.CategoryApiPresenter;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.net.URI;
+import java.util.Objects;
 import java.util.function.Function;
 
 @RestController
 public class CategoryController implements CategoryAPI {
-    @Autowired
-    private CreateCategoryUseCase createCategoryUseCase;
+    private final CreateCategoryUseCase createCategoryUseCase;
+    private final GetCategoryByIdUseCase getCategoryByIdUseCase;
+
+    public CategoryController(
+            final CreateCategoryUseCase createCategoryUseCase,
+            final GetCategoryByIdUseCase getCategoryByIdUseCase
+    ) {
+        this.createCategoryUseCase = Objects.requireNonNull(createCategoryUseCase);
+        this.getCategoryByIdUseCase = Objects.requireNonNull(getCategoryByIdUseCase);
+    }
 
     @Override
     public ResponseEntity<?> createCategory(final CreateCategoryApiInput input) {
@@ -37,5 +48,10 @@ public class CategoryController implements CategoryAPI {
     @Override
     public Pagination<?> listCategories(String search, int page, int perPage, String sort, String direction) {
         return null;
+    }
+
+    @Override
+    public CategoryApiOutput getById(String id) {
+        return CategoryApiPresenter.present(this.getCategoryByIdUseCase.execute(id));
     }
 }
