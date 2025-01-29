@@ -1,4 +1,4 @@
 package com.codeflix.admin.catalog.domain.validation;
 
-public record Error(String Message) {
+public record Error(String message) {
 }

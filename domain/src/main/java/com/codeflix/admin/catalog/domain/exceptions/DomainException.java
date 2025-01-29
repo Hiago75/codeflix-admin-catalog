@@ -17,7 +17,7 @@ public class DomainException extends NoStackTraceException {
     }
 
     public static DomainException with(final Error anError) {
-        return new DomainException(anError.Message(), List.of(anError));
+        return new DomainException(anError.message(), List.of(anError));
     }
 
     public List<Error> getErrors() {
