@@ -3,6 +3,7 @@ package com.codeflix.admin.catalog.infrastructure.api;
 import com.codeflix.admin.catalog.ControllerTest;
 import com.codeflix.admin.catalog.application.category.create.CreateCategoryOutput;
 import com.codeflix.admin.catalog.application.category.create.CreateCategoryUseCase;
+import com.codeflix.admin.catalog.application.category.delete.DeleteCategoryUseCase;
 import com.codeflix.admin.catalog.application.category.retrieve.get.CategoryOutput;
 import com.codeflix.admin.catalog.application.category.retrieve.get.GetCategoryByIdUseCase;
 import com.codeflix.admin.catalog.application.category.update.UpdateCategoryOutput;
@@ -31,8 +32,7 @@ import static org.hamcrest.Matchers.*;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.argThat;
 import static org.mockito.Mockito.*;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.put;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
@@ -52,6 +52,9 @@ public class CategoryAPITest {
 
     @MockBean
     private UpdateCategoryUseCase updateCategoryUseCase;
+
+    @MockBean
+    private DeleteCategoryUseCase deleteCategoryUseCase;
 
     @Test
     public void givenAValidCommand_whenCallsCreateCategory_thenShouldReturnCategoryId() throws Exception {
@@ -273,5 +276,21 @@ public class CategoryAPITest {
                 .andExpect(jsonPath("$.errors[0].message", equalTo(expectedError)));
 
         verify(updateCategoryUseCase, times(1)).execute(any());
+    }
+
+    @Test
+    public void givenAValidId_whenCallsDeleteCategory_shouldReturnNoContent() throws Exception {
+        final var expectedId = "123";
+
+        doNothing()
+                .when(deleteCategoryUseCase).execute(any());
+
+        final var request = delete("/categories/{id}", expectedId);
+
+        final var response = this.mvc.perform(request).andDo(print());
+
+        response.andExpect(status().isNoContent());
+
+        verify(deleteCategoryUseCase, times(1)).execute(eq(expectedId));
     }
 }
