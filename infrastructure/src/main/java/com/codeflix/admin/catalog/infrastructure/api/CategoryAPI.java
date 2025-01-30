@@ -3,6 +3,7 @@ package com.codeflix.admin.catalog.infrastructure.api;
 import com.codeflix.admin.catalog.domain.pagination.Pagination;
 import com.codeflix.admin.catalog.infrastructure.category.models.CategoryApiOutput;
 import com.codeflix.admin.catalog.infrastructure.category.models.CreateCategoryApiInput;
+import com.codeflix.admin.catalog.infrastructure.category.models.UpdateCategoryApiInput;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
@@ -51,4 +52,17 @@ public interface CategoryAPI {
             @ApiResponse(responseCode = "500", description = "An unexpected server error occurred")
     })
     CategoryApiOutput getById(@PathVariable(name = "id") String id);
+
+    @PutMapping(
+            value = "{id}",
+            consumes = MediaType.APPLICATION_JSON_VALUE,
+            produces = MediaType.APPLICATION_JSON_VALUE
+    )
+    @Operation(summary = "Update a specific category by its identifier")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "Category update successfully"),
+            @ApiResponse(responseCode = "422", description = "A validation error was thrown"),
+            @ApiResponse(responseCode = "500", description = "An unexpected server error occurred")
+    })
+    ResponseEntity<?> updateById(@PathVariable(name = "id") String id, @RequestBody @Valid UpdateCategoryApiInput input);
 }
