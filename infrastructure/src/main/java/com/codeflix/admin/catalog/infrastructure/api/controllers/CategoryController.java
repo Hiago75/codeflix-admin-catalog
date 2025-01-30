@@ -3,6 +3,7 @@ package com.codeflix.admin.catalog.infrastructure.api.controllers;
 import com.codeflix.admin.catalog.application.category.create.CreateCategoryCommand;
 import com.codeflix.admin.catalog.application.category.create.CreateCategoryOutput;
 import com.codeflix.admin.catalog.application.category.create.CreateCategoryUseCase;
+import com.codeflix.admin.catalog.application.category.delete.DeleteCategoryUseCase;
 import com.codeflix.admin.catalog.application.category.retrieve.get.GetCategoryByIdUseCase;
 import com.codeflix.admin.catalog.application.category.update.UpdateCategoryCommand;
 import com.codeflix.admin.catalog.application.category.update.UpdateCategoryOutput;
@@ -26,15 +27,18 @@ public class CategoryController implements CategoryAPI {
     private final CreateCategoryUseCase createCategoryUseCase;
     private final GetCategoryByIdUseCase getCategoryByIdUseCase;
     private final UpdateCategoryUseCase updateCategoryUseCase;
+    private final DeleteCategoryUseCase deleteCategoryUseCase;
 
     public CategoryController(
             final CreateCategoryUseCase createCategoryUseCase,
             final GetCategoryByIdUseCase getCategoryByIdUseCase,
-            final UpdateCategoryUseCase updateCategoryUseCase
+            final UpdateCategoryUseCase updateCategoryUseCase,
+            final DeleteCategoryUseCase deleteCategoryUseCase
     ) {
         this.createCategoryUseCase = Objects.requireNonNull(createCategoryUseCase);
         this.getCategoryByIdUseCase = Objects.requireNonNull(getCategoryByIdUseCase);
         this.updateCategoryUseCase = Objects.requireNonNull(updateCategoryUseCase);
+        this.deleteCategoryUseCase = Objects.requireNonNull(deleteCategoryUseCase);
     }
 
     @Override
@@ -77,5 +81,10 @@ public class CategoryController implements CategoryAPI {
         final Function<UpdateCategoryOutput, ResponseEntity<?>> onSuccess = ResponseEntity::ok;
 
         return this.updateCategoryUseCase.execute(aCommand).fold(onError, onSuccess);
+    }
+
+    @Override
+    public void deleteById(final String id) {
+        this.deleteCategoryUseCase.execute(id);
     }
 }
