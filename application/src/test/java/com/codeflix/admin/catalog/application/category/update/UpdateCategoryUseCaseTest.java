@@ -4,6 +4,7 @@ import com.codeflix.admin.catalog.domain.category.Category;
 import com.codeflix.admin.catalog.domain.category.CategoryGateway;
 import com.codeflix.admin.catalog.domain.category.CategoryID;
 import com.codeflix.admin.catalog.domain.exceptions.DomainException;
+import com.codeflix.admin.catalog.domain.exceptions.NotFoundException;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -174,17 +175,15 @@ public class UpdateCategoryUseCaseTest {
         final var expectedDescription = "Most watched category";
         final var expectedIsActive = true;
         final var expectedErrorMessage = "Category with ID %s was not found".formatted(expectedId);
-        final var expectedErrorCount = 1;
 
         final var aCommand = UpdateCategoryCommand.with(expectedId, expectedName, expectedDescription, expectedIsActive);
 
         when(categoryGateway.findById(eq(CategoryID.from(expectedId))))
                 .thenReturn(Optional.empty());
 
-        final var actualException = assertThrows(DomainException.class, () -> useCase.execute(aCommand).getLeft());
+        final var actualException = assertThrows(NotFoundException.class, () -> useCase.execute(aCommand).getLeft());
 
-        assertEquals(expectedErrorCount, actualException.getErrors().size());
-        assertEquals(expectedErrorMessage, actualException.getErrors().get(0).message());
+        assertEquals(expectedErrorMessage, actualException.getMessage());
         verify(categoryGateway, times(1)).findById(eq(CategoryID.from(expectedId)));
         verify(categoryGateway, times(0)).update(any());
     }

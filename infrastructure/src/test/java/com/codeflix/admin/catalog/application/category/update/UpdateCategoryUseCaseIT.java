@@ -4,6 +4,7 @@ import com.codeflix.admin.catalog.IntegrationTest;
 import com.codeflix.admin.catalog.domain.category.Category;
 import com.codeflix.admin.catalog.domain.category.CategoryGateway;
 import com.codeflix.admin.catalog.domain.exceptions.DomainException;
+import com.codeflix.admin.catalog.domain.exceptions.NotFoundException;
 import com.codeflix.admin.catalog.infrastructure.category.persistance.CategoryJpaEntity;
 import com.codeflix.admin.catalog.infrastructure.category.persistance.CategoryRepository;
 import org.junit.jupiter.api.Test;
@@ -151,14 +152,12 @@ public class UpdateCategoryUseCaseIT {
         final var expectedDescription = "Most watched category";
         final var expectedIsActive = true;
         final var expectedErrorMessage = "Category with ID %s was not found".formatted(expectedId);
-        final var expectedErrorCount = 1;
 
         final var aCommand = UpdateCategoryCommand.with(expectedId, expectedName, expectedDescription, expectedIsActive);
 
-        final var actualException = assertThrows(DomainException.class, () -> useCase.execute(aCommand).getLeft());
+        final var actualException = assertThrows(NotFoundException.class, () -> useCase.execute(aCommand).getLeft());
 
-        assertEquals(expectedErrorCount, actualException.getErrors().size());
-        assertEquals(expectedErrorMessage, actualException.getErrors().get(0).message());
+        assertEquals(expectedErrorMessage, actualException.getMessage());
     }
 
     private void save(final Category aCategory) {
