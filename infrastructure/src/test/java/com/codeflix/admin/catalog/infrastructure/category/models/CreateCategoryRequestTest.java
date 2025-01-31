@@ -15,6 +15,27 @@ public class CreateCategoryRequestTest {
     private JacksonTester<CreateCategoryRequest> json;
 
     @Test
+    public void testMarshall() throws IOException {
+        final var expectedName = "Movies";
+        final var expectedDescription = "Most watched category";
+        final var expectedIsActive = false;
+
+        final var response = new CreateCategoryRequest(
+                expectedName,
+                expectedDescription,
+                expectedIsActive
+        );
+
+        final var actualJson = this.json.write(response);
+
+        assertThat(actualJson)
+                .hasJsonPathValue("$.name", expectedName)
+                .hasJsonPathValue("$.description", expectedDescription)
+                .hasJsonPathValue("$.is_active", expectedIsActive);
+    }
+
+
+    @Test
     public void testUnmarshall() throws IOException {
         final var expectedName = "Movies";
         final var expectedDescription = "Most watched category";
