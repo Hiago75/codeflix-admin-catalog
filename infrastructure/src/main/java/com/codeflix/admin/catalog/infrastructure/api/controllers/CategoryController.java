@@ -13,9 +13,10 @@ import com.codeflix.admin.catalog.domain.category.CategorySearchQuery;
 import com.codeflix.admin.catalog.domain.pagination.Pagination;
 import com.codeflix.admin.catalog.domain.validation.handler.Notification;
 import com.codeflix.admin.catalog.infrastructure.api.CategoryAPI;
-import com.codeflix.admin.catalog.infrastructure.category.models.CategoryApiOutput;
-import com.codeflix.admin.catalog.infrastructure.category.models.CreateCategoryApiInput;
-import com.codeflix.admin.catalog.infrastructure.category.models.UpdateCategoryApiInput;
+import com.codeflix.admin.catalog.infrastructure.category.models.CategoryListResponse;
+import com.codeflix.admin.catalog.infrastructure.category.models.CategoryResponse;
+import com.codeflix.admin.catalog.infrastructure.category.models.CreateCategoryRequest;
+import com.codeflix.admin.catalog.infrastructure.category.models.UpdateCategoryRequest;
 import com.codeflix.admin.catalog.infrastructure.category.presenters.CategoryApiPresenter;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.RestController;
@@ -47,7 +48,7 @@ public class CategoryController implements CategoryAPI {
     }
 
     @Override
-    public ResponseEntity<?> createCategory(final CreateCategoryApiInput input) {
+    public ResponseEntity<?> createCategory(final CreateCategoryRequest input) {
         final var aCommand = CreateCategoryCommand.with(
                 input.name(),
                 input.description(),
@@ -63,18 +64,19 @@ public class CategoryController implements CategoryAPI {
     }
 
     @Override
-    public Pagination<?> listCategories(final String search, final int page, final int perPage, final String sort, final String direction) {
+    public Pagination<CategoryListResponse> listCategories(final String search, final int page, final int perPage, final String sort, final String direction) {
         return listCategoriesUseCase
-                .execute(new CategorySearchQuery(page, perPage, search, sort, direction));
+                .execute(new CategorySearchQuery(page, perPage, search, sort, direction))
+                .map(CategoryApiPresenter::present);
     }
 
     @Override
-    public CategoryApiOutput getById(String id) {
+    public CategoryResponse getById(String id) {
         return CategoryApiPresenter.present(this.getCategoryByIdUseCase.execute(id));
     }
 
     @Override
-    public ResponseEntity<?> updateById(final String id, final UpdateCategoryApiInput input) {
+    public ResponseEntity<?> updateById(final String id, final UpdateCategoryRequest input) {
         final var aCommand = UpdateCategoryCommand.with(
                 id,
                 input.name(),

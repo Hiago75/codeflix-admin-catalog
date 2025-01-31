@@ -17,8 +17,8 @@ import com.codeflix.admin.catalog.domain.exceptions.NotFoundException;
 import com.codeflix.admin.catalog.domain.pagination.Pagination;
 import com.codeflix.admin.catalog.domain.validation.Error;
 import com.codeflix.admin.catalog.domain.validation.handler.Notification;
-import com.codeflix.admin.catalog.infrastructure.category.models.CreateCategoryApiInput;
-import com.codeflix.admin.catalog.infrastructure.category.models.UpdateCategoryApiInput;
+import com.codeflix.admin.catalog.infrastructure.category.models.CreateCategoryRequest;
+import com.codeflix.admin.catalog.infrastructure.category.models.UpdateCategoryRequest;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -69,7 +69,7 @@ public class CategoryAPITest {
         final var expectedDescription = "Most watched category";
         final var expectedIsActive = true;
 
-        final var anApiInput = new CreateCategoryApiInput(expectedName, expectedDescription, expectedIsActive);
+        final var anApiInput = new CreateCategoryRequest(expectedName, expectedDescription, expectedIsActive);
 
         when(createCategoryUseCase.execute(any()))
                 .thenReturn(Right(CreateCategoryOutput.from("123")));
@@ -99,7 +99,7 @@ public class CategoryAPITest {
         final var expectedIsActive = true;
         final var expectedError = "'name' should not be null";
 
-        final var anApiInput = new CreateCategoryApiInput(expectedName, expectedDescription, expectedIsActive);
+        final var anApiInput = new CreateCategoryRequest(expectedName, expectedDescription, expectedIsActive);
 
         when(createCategoryUseCase.execute(any()))
                 .thenReturn(Left(Notification.create(new Error(expectedError))));
@@ -130,7 +130,7 @@ public class CategoryAPITest {
         final var expectedIsActive = true;
         final var expectedError = "'name' should not be null";
 
-        final var anApiInput = new CreateCategoryApiInput(expectedName, expectedDescription, expectedIsActive);
+        final var anApiInput = new CreateCategoryRequest(expectedName, expectedDescription, expectedIsActive);
 
         when(createCategoryUseCase.execute(any()))
                 .thenThrow(DomainException.with(new Error(expectedError)));
@@ -209,7 +209,7 @@ public class CategoryAPITest {
         when(updateCategoryUseCase.execute(any()))
                 .thenReturn(Right(UpdateCategoryOutput.from(expectedId)));
 
-        final var aCommand = new UpdateCategoryApiInput(expectedName, expectedDescription, expectedIsActive);
+        final var aCommand = new UpdateCategoryRequest(expectedName, expectedDescription, expectedIsActive);
 
         final var request = put("/categories/{id}", expectedId)
                 .accept(MediaType.APPLICATION_JSON)
@@ -241,7 +241,7 @@ public class CategoryAPITest {
         when(updateCategoryUseCase.execute(any()))
                 .thenThrow(NotFoundException.with(Category.class, CategoryID.from(expectedId)));
 
-        final var aCommand = new UpdateCategoryApiInput(expectedName, expectedDescription, expectedIsActive);
+        final var aCommand = new UpdateCategoryRequest(expectedName, expectedDescription, expectedIsActive);
 
         final var request = put("/categories/{id}", expectedId)
                 .accept(MediaType.APPLICATION_JSON)
@@ -268,7 +268,7 @@ public class CategoryAPITest {
         when(updateCategoryUseCase.execute(any()))
                 .thenReturn(Left(Notification.create(new Error(expectedError))));
 
-        final var aCommand = new UpdateCategoryApiInput(expectedName, expectedDescription, expectedIsActive);
+        final var aCommand = new UpdateCategoryRequest(expectedName, expectedDescription, expectedIsActive);
 
         final var request = put("/categories/{id}", expectedId)
                 .accept(MediaType.APPLICATION_JSON)
@@ -328,15 +328,14 @@ public class CategoryAPITest {
 
         response.andExpect(status().isOk())
                 .andExpect(jsonPath("$.current_page", equalTo(expectedPage)))
-                .andExpect(jsonPath("$.perPage", equalTo(expectedPerPage)))
+                .andExpect(jsonPath("$.per_page", equalTo(expectedPerPage)))
                 .andExpect(jsonPath("$.total", equalTo(expectedTotal)))
                 .andExpect(jsonPath("$.items", hasSize(expectedItemsCount)))
-                .andExpect(jsonPath("$.items[0].id", equalTo(aCategory.getId())))
+                .andExpect(jsonPath("$.items[0].id", equalTo(aCategory.getId().getValue())))
                 .andExpect(jsonPath("$.items[0].name", equalTo(aCategory.getName())))
                 .andExpect(jsonPath("$.items[0].description", equalTo(aCategory.getDescription())))
-                .andExpect(jsonPath("$.items[0].isActive", equalTo(aCategory.isActive())))
+                .andExpect(jsonPath("$.items[0].is_active", equalTo(aCategory.isActive())))
                 .andExpect(jsonPath("$.items[0].created_at", equalTo(aCategory.getCreatedAt().toString())))
-                .andExpect(jsonPath("$.items[0].updated_at", equalTo(aCategory.getUpdatedAt().toString())))
                 .andExpect(jsonPath("$.items[0].deleted_at", equalTo(aCategory.getDeletedAt())));
 
         verify(listCategoriesUseCase, times(1)).execute(argThat(query ->
