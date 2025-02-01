@@ -263,6 +263,23 @@ public class CategoryE2ETest {
         assertNull(actualCategory.getDeletedAt());
     }
 
+    @Test
+    public void asACatalogAdminIShouldBeAbleToDeleteACategoryByItsIdentifier() throws Exception {
+        assertTrue(MYSQL_CONTAINER.isRunning());
+        assertEquals(0, categoryRepository.count());
+
+        final var expectedName = "Movies";
+        final var expectedDescription = "Most watched category";
+        final var expectedIsActive = true;
+
+        final var actualId = givenACategory(expectedName, expectedDescription, expectedIsActive);
+
+        this.mvc.perform(MockMvcRequestBuilders.delete("/categories/" + actualId.getValue()))
+                .andExpect(status().isNoContent());
+
+        assertFalse(this.categoryRepository.existsById(actualId.getValue()));
+    }
+
     private ResultActions listCategories(final int page, final int perPage) throws Exception {
         return listCategories(page, perPage, "", "", "");
     }
