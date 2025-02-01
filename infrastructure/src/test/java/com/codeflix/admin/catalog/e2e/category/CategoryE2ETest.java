@@ -12,13 +12,17 @@ import org.springframework.http.MediaType;
 import org.springframework.test.context.DynamicPropertyRegistry;
 import org.springframework.test.context.DynamicPropertySource;
 import org.springframework.test.web.servlet.MockMvc;
+import org.springframework.test.web.servlet.ResultActions;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
-import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
 import org.testcontainers.containers.MySQLContainer;
 import org.testcontainers.junit.jupiter.Container;
 import org.testcontainers.junit.jupiter.Testcontainers;
 
+import static org.hamcrest.Matchers.equalTo;
+import static org.hamcrest.Matchers.hasSize;
 import static org.junit.jupiter.api.Assertions.*;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 @E2ETest
 @Testcontainers
@@ -44,7 +48,6 @@ public class CategoryE2ETest {
     @Test
     public void asACatalogAdminIShouldBeAbleToCreateANewCategoryWithValidValues() throws Exception {
         assertTrue(MYSQL_CONTAINER.isRunning());
-
         assertEquals(0, categoryRepository.count());
 
         final var expectedName = "Movies";
@@ -63,6 +66,100 @@ public class CategoryE2ETest {
         assertNull(actualCategory.deletedAt());
     }
 
+    @Test
+    public void asACatalogAdminIShouldBeAbleToNavigateToAllCategories() throws Exception {
+        assertTrue(MYSQL_CONTAINER.isRunning());
+        assertEquals(0, categoryRepository.count());
+
+
+        givenACategory("Movies",null, true);
+        givenACategory("Documentaries",null, true);
+        givenACategory("Shows",null, true);
+
+        listCategories(0, 1)
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.current_page", equalTo(0)))
+                .andExpect(jsonPath("$.per_page", equalTo(1)))
+                .andExpect(jsonPath("$.total", equalTo(3)))
+                .andExpect(jsonPath("$.items", hasSize(1)))
+                .andExpect(jsonPath("$.items[0].name", equalTo("Documentaries")));
+
+        listCategories(1, 1)
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.current_page", equalTo(1)))
+                .andExpect(jsonPath("$.per_page", equalTo(1)))
+                .andExpect(jsonPath("$.total", equalTo(3)))
+                .andExpect(jsonPath("$.items", hasSize(1)))
+                .andExpect(jsonPath("$.items[0].name", equalTo("Movies")));
+
+        listCategories(2, 1)
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.current_page", equalTo(2)))
+                .andExpect(jsonPath("$.per_page", equalTo(1)))
+                .andExpect(jsonPath("$.total", equalTo(3)))
+                .andExpect(jsonPath("$.items", hasSize(1)))
+                .andExpect(jsonPath("$.items[0].name", equalTo("Shows")));
+    }
+
+    @Test
+    public void asACatalogAdminIShouldBeAbleToSearchBetweenAllCategories() throws Exception {
+        assertTrue(MYSQL_CONTAINER.isRunning());
+        assertEquals(0, categoryRepository.count());
+
+        givenACategory("Movies",null, true);
+        givenACategory("Documentaries",null, true);
+        givenACategory("Shows",null, true);
+
+        listCategories(0, 1, "mov", "name", "desc")
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.current_page", equalTo(0)))
+                .andExpect(jsonPath("$.per_page", equalTo(1)))
+                .andExpect(jsonPath("$.total", equalTo(1)))
+                .andExpect(jsonPath("$.items", hasSize(1)))
+                .andExpect(jsonPath("$.items[0].name", equalTo("Movies")));
+    }
+
+    @Test
+    public void asACatalogAdminIShouldBeAbleToSortAllCategoriesByDescriptionDesc() throws Exception {
+        assertTrue(MYSQL_CONTAINER.isRunning());
+        assertEquals(0, categoryRepository.count());
+
+        givenACategory("Movies","C", true);
+        givenACategory("Documentaries","Z", true);
+        givenACategory("Shows","A", true);
+
+        listCategories(0, 3, "", "description", "desc")
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.current_page", equalTo(0)))
+                .andExpect(jsonPath("$.per_page", equalTo(3)))
+                .andExpect(jsonPath("$.total", equalTo(3)))
+                .andExpect(jsonPath("$.items", hasSize(3)))
+                .andExpect(jsonPath("$.items[0].name", equalTo("Documentaries")))
+                .andExpect(jsonPath("$.items[1].name", equalTo("Movies")))
+                .andExpect(jsonPath("$.items[2].name", equalTo("Shows")));
+    }
+
+    private ResultActions listCategories(final int page, final int perPage) throws Exception {
+        return listCategories(page, perPage, "", "", "");
+    }
+
+    private ResultActions listCategories(
+            final int page,
+            final int perPage,
+            final String search,
+            final String sort,
+            final String directions
+    ) throws Exception {
+        final var aRequest = MockMvcRequestBuilders.get("/categories")
+                .queryParam("page", String.valueOf(page))
+                .queryParam("perPage", String.valueOf(perPage))
+                .queryParam("search", search)
+                .queryParam("sort", sort)
+                .queryParam("dir", directions);
+
+        return this.mvc.perform(aRequest);
+    }
+
     private CategoryID givenACategory(final String aName, final String aDescription, final boolean isActive) throws Exception {
         final var aRequestBody = new CreateCategoryRequest(aName, aDescription, isActive);
 
@@ -71,7 +168,7 @@ public class CategoryE2ETest {
                 .content(Json.writeValueAsString(aRequestBody));
 
         final var actualId = this.mvc.perform(aRequest)
-                .andExpect(MockMvcResultMatchers.status().isCreated())
+                .andExpect(status().isCreated())
                 .andReturn()
                 .getResponse().getHeader("Location")
                 .replace("/categories/", "");
@@ -83,7 +180,7 @@ public class CategoryE2ETest {
         final var aRequest = MockMvcRequestBuilders.get("/categories/" + anId);
 
         final var json = this.mvc.perform(aRequest)
-                .andExpect(MockMvcResultMatchers.status().isOk())
+                .andExpect(status().isOk())
                 .andReturn()
                 .getResponse().getContentAsString();
 
