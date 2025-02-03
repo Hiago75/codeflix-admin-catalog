@@ -87,16 +87,16 @@ public class Category extends AggregateRoot<CategoryID> implements Cloneable{
    }
 
    public Category update(final String aName, final String aDescription, final boolean isActive) {
-      this.name = aName;
-      this.description = aDescription;
-
       if (isActive) {
          activate();
       } else {
          deactivate();
       }
 
+      this.name = aName;
+      this.description = aDescription;
       this.updatedAt = InstantUtils.now();
+
       return this;
    }
 
