@@ -1,6 +1,7 @@
 package com.codeflix.admin.catalog.domain.genre;
 
 import com.codeflix.admin.catalog.domain.AggregateRoot;
+import com.codeflix.admin.catalog.domain.category.Category;
 import com.codeflix.admin.catalog.domain.category.CategoryID;
 import com.codeflix.admin.catalog.domain.exceptions.NotificationException;
 import com.codeflix.admin.catalog.domain.utils.InstantUtils;
@@ -104,10 +105,32 @@ public class Genre extends AggregateRoot<GenreID> {
         }
 
         this.name = aName;
-        this.categories = new ArrayList<>(categoriesList);
+        this.categories = new ArrayList<>(categoriesList != null ? categoriesList : Collections.emptyList());
         this.updatedAt = InstantUtils.now();
 
         selfValidate();
+
+        return this;
+    }
+
+    public Genre addCategory(final CategoryID aCategoryID) {
+        if (aCategoryID == null) {
+            return this;
+        }
+
+        this.categories.add(aCategoryID);
+        this.updatedAt = InstantUtils.now();
+
+        return this;
+    }
+
+    public Genre removeCategory(final CategoryID aCategoryID) {
+        if (aCategoryID == null) {
+            return this;
+        }
+
+        this.categories.remove(aCategoryID);
+        this.updatedAt = InstantUtils.now();
 
         return this;
     }
