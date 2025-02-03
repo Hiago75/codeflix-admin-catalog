@@ -9,7 +9,7 @@ import com.codeflix.admin.catalog.application.category.retrieve.list.ListCategor
 import com.codeflix.admin.catalog.application.category.update.UpdateCategoryCommand;
 import com.codeflix.admin.catalog.application.category.update.UpdateCategoryOutput;
 import com.codeflix.admin.catalog.application.category.update.UpdateCategoryUseCase;
-import com.codeflix.admin.catalog.domain.category.CategorySearchQuery;
+import com.codeflix.admin.catalog.domain.pagination.SearchQuery;
 import com.codeflix.admin.catalog.domain.pagination.Pagination;
 import com.codeflix.admin.catalog.domain.validation.handler.Notification;
 import com.codeflix.admin.catalog.infrastructure.api.CategoryAPI;
@@ -66,7 +66,7 @@ public class CategoryController implements CategoryAPI {
     @Override
     public Pagination<CategoryListResponse> listCategories(final String search, final int page, final int perPage, final String sort, final String direction) {
         return listCategoriesUseCase
-                .execute(new CategorySearchQuery(page, perPage, search, sort, direction))
+                .execute(new SearchQuery(page, perPage, search, sort, direction))
                 .map(CategoryApiPresenter::present);
     }
 
