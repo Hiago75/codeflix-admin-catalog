@@ -1,6 +1,7 @@
 package com.codeflix.admin.catalog.infrastructure.category.models;
 
 import com.codeflix.admin.catalog.JacksonTest;
+import com.codeflix.admin.catalog.domain.utils.InstantUtils;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.json.JacksonTester;
@@ -22,8 +23,8 @@ public class CategoryListResponseTest {
         final var expectedName = "Movies";
         final var expectedDescription = "Most watched category";
         final var expectedIsActive = false;
-        final var expectedCreatedAt = Instant.now();
-        final var expectedDeletedAt = Instant.now();
+        final var expectedCreatedAt = InstantUtils.now();
+        final var expectedDeletedAt = InstantUtils.now();
 
         final var response = new CategoryListResponse(
                 expectedId,

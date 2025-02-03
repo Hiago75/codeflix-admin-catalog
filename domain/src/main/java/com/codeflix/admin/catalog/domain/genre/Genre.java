@@ -2,8 +2,8 @@ package com.codeflix.admin.catalog.domain.genre;
 
 import com.codeflix.admin.catalog.domain.AggregateRoot;
 import com.codeflix.admin.catalog.domain.category.CategoryID;
-import com.codeflix.admin.catalog.domain.exceptions.DomainException;
 import com.codeflix.admin.catalog.domain.exceptions.NotificationException;
+import com.codeflix.admin.catalog.domain.utils.InstantUtils;
 import com.codeflix.admin.catalog.domain.validation.ValidationHandler;
 import com.codeflix.admin.catalog.domain.validation.handler.Notification;
 
@@ -70,7 +70,7 @@ public class Genre extends AggregateRoot<GenreID> {
 
     public static Genre newGenre( final String aName, final boolean isActive) {
         final var anId = GenreID.unique();
-        final var now = Instant.now();
+        final var now = InstantUtils.now();
         final var deletedAt = isActive ? null : now;
 
         return new Genre(anId, aName, isActive, new ArrayList<>(), now, now, deletedAt);
@@ -79,6 +79,26 @@ public class Genre extends AggregateRoot<GenreID> {
     @Override
     public void validate(ValidationHandler handler) {
         new GenreValidator(this, handler).validate();
+    }
+
+
+    public Genre deactivate() {
+        if (getDeletedAt() == null) {
+            this.deletedAt = InstantUtils.now();
+        }
+
+        this.active = false;
+        this.updatedAt = InstantUtils.now();
+
+        return this;
+    }
+
+    public Genre activate() {
+        this.deletedAt = null;
+        this.active = true;
+        this.updatedAt = InstantUtils.now();
+
+        return this;
     }
 
     public String getName() {
