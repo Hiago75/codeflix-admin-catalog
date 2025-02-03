@@ -1,7 +1,6 @@
 package com.codeflix.admin.catalog.domain.genre;
 
 import com.codeflix.admin.catalog.domain.AggregateRoot;
-import com.codeflix.admin.catalog.domain.category.Category;
 import com.codeflix.admin.catalog.domain.category.CategoryID;
 import com.codeflix.admin.catalog.domain.exceptions.NotificationException;
 import com.codeflix.admin.catalog.domain.utils.InstantUtils;

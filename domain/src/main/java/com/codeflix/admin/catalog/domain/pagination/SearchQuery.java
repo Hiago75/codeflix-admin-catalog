@@ -1,6 +1,6 @@
-package com.codeflix.admin.catalog.domain.category;
+package com.codeflix.admin.catalog.domain.pagination;
 
-public record CategorySearchQuery(
+public record SearchQuery(
         int page,
         int perPage,
         String terms,

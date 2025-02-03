@@ -3,11 +3,10 @@ package com.codeflix.admin.catalog.infrastructure.category;
 import com.codeflix.admin.catalog.domain.category.Category;
 import com.codeflix.admin.catalog.domain.category.CategoryGateway;
 import com.codeflix.admin.catalog.domain.category.CategoryID;
-import com.codeflix.admin.catalog.domain.category.CategorySearchQuery;
+import com.codeflix.admin.catalog.domain.pagination.SearchQuery;
 import com.codeflix.admin.catalog.domain.pagination.Pagination;
 import com.codeflix.admin.catalog.infrastructure.category.persistance.CategoryJpaEntity;
 import com.codeflix.admin.catalog.infrastructure.category.persistance.CategoryRepository;
-import com.codeflix.admin.catalog.infrastructure.utils.SpecificationUtils;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.jpa.domain.Specification;
@@ -56,7 +55,7 @@ public class CategoryMySQLGateway implements CategoryGateway {
     }
 
     @Override
-    public Pagination<Category> findAll(final CategorySearchQuery aQuery) {
+    public Pagination<Category> findAll(final SearchQuery aQuery) {
         final var page = PageRequest.of(
                 aQuery.page(),
                 aQuery.perPage(),

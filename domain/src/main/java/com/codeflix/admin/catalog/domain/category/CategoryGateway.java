@@ -1,6 +1,7 @@
 package com.codeflix.admin.catalog.domain.category;
 
 import com.codeflix.admin.catalog.domain.pagination.Pagination;
+import com.codeflix.admin.catalog.domain.pagination.SearchQuery;
 
 import java.util.Optional;
 
@@ -13,5 +14,5 @@ public interface CategoryGateway {
 
     Category update(Category aCategory);
 
-    Pagination<Category> findAll(CategorySearchQuery aQuery);
+    Pagination<Category> findAll(SearchQuery aQuery);
 }
