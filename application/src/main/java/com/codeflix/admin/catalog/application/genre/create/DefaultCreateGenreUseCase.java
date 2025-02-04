@@ -1,6 +1,5 @@
 package com.codeflix.admin.catalog.application.genre.create;
 
-import com.codeflix.admin.catalog.application.category.create.CreateCategoryOutput;
 import com.codeflix.admin.catalog.domain.category.CategoryGateway;
 import com.codeflix.admin.catalog.domain.category.CategoryID;
 import com.codeflix.admin.catalog.domain.exceptions.NotificationException;
