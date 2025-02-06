@@ -42,6 +42,7 @@ public class DefaultUpdateGenreUseCase extends UpdateGenreUseCase{
 
         final var notification = Notification.create();
         notification.append(validationCategories(categories));
+
         notification.validate(() -> aGenre.update(aCommand.name(), aCommand.isActive(), categories));
 
         if (notification.hasErrors()) {
