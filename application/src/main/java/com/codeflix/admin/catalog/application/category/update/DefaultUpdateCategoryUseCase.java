@@ -10,6 +10,7 @@ import com.codeflix.admin.catalog.domain.validation.handler.Notification;
 import io.vavr.control.Either;
 
 import java.util.Objects;
+import java.util.function.Supplier;
 
 import static io.vavr.API.Left;
 import static io.vavr.API.Try;
@@ -26,7 +27,7 @@ public class DefaultUpdateCategoryUseCase extends UpdateCategoryUseCase{
         final var anId = CategoryID.from(aCommand.id());
 
         final var aCategory = this.categoryGateway.findById(anId)
-                .orElseThrow(() -> notFound(anId));
+                .orElseThrow(notFound(anId));
 
         final var notification = Notification.create();
         aCategory
@@ -42,7 +43,7 @@ public class DefaultUpdateCategoryUseCase extends UpdateCategoryUseCase{
                 .bimap(Notification::create, UpdateCategoryOutput::from);
     }
 
-    private static NotFoundException notFound(CategoryID anId) {
-        return NotFoundException.with(Category.class, anId);
+    private static Supplier<DomainException> notFound(CategoryID anId) {
+        return () -> NotFoundException.with(Category.class, anId);
     }
 }

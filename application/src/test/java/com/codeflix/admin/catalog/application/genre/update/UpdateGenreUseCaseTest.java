@@ -44,7 +44,7 @@ public class UpdateGenreUseCaseTest {
                 expectedId.getValue(),
                 expectedName,
                 expectedIsActive,
-                expectedCategories
+                asString(expectedCategories)
         );
 
         when(genreGateway.findById(any()))
@@ -69,5 +69,9 @@ public class UpdateGenreUseCaseTest {
                 && aGenre.getUpdatedAt().isBefore(aUpdatedGenre.getUpdatedAt())
                 && Objects.isNull(aUpdatedGenre.getDeletedAt())
         ));
+    }
+
+    private List<String> asString(final List<CategoryID> ids) {
+        return ids.stream().map(CategoryID::getValue).toList();
     }
 }
