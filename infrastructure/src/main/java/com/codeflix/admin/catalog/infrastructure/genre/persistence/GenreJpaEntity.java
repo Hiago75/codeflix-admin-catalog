@@ -15,6 +15,7 @@ import static jakarta.persistence.FetchType.EAGER;
 @Entity
 @Table(name = "genres")
 public class GenreJpaEntity {
+    @Id
     @Column(name = "id", nullable = false)
     private String id;
 
