@@ -37,7 +37,7 @@ public class GenreMySQLGateway implements GenreGateway {
 
     @Override
     public Genre update(Genre aGenre) {
-        return null;
+        return save(aGenre);
     }
 
     @Override
