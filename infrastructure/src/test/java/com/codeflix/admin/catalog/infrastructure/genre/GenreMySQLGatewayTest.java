@@ -285,6 +285,45 @@ public class GenreMySQLGatewayTest {
         assertEquals(0, genreRepository.count());
     }
 
+    @Test
+    public void givenAPrePersistedGenre_whenCalledFindByID_shouldReturnGenre() {
+        final var movies = categoryGateway.create(Category.newCategory("Movies", null, true));
+        final var shows = categoryGateway.create(Category.newCategory("Shows", null, true));
+
+        final var expectedName = "Action";
+        final var expectedIsActive = true;
+        final var expectedCategories = List.of(movies.getId(), shows.getId());
+
+        final var aGenre = Genre.newGenre(expectedName, expectedIsActive);
+        aGenre.addCategories(expectedCategories);
+        final var expectedId = aGenre.getId();
+
+        genreRepository.saveAndFlush(GenreJpaEntity.from(aGenre));
+
+        assertEquals(1, genreRepository.count());
+
+        final var actualGenre = genreGateway.findById(aGenre.getId()).get();
+
+        assertEquals(expectedId, actualGenre.getId());
+        assertEquals(expectedName, actualGenre.getName());
+        assertEquals(expectedIsActive, actualGenre.isActive());
+        assertEquals(sortedCategories(expectedCategories), sortedCategories(actualGenre.getCategories()));
+        assertEquals(aGenre.getCreatedAt(), actualGenre.getCreatedAt());
+        assertEquals(actualGenre.getUpdatedAt(), aGenre.getUpdatedAt());
+        assertNull(actualGenre.getDeletedAt());
+    }
+
+    @Test
+    public void givenANonPersistedGenre_whenCalledFindByID_shouldReturnGenre() {
+       final var expectedId = GenreID.from("123");
+
+       assertEquals(0, genreRepository.count());
+
+       final var actualGenre = genreGateway.findById(expectedId);
+
+       assertTrue(actualGenre.isEmpty());
+    }
+
     private List<CategoryID> sortedCategories(final List<CategoryID> expectedCategories) {
         return expectedCategories.stream()
                 .sorted(Comparator.comparing(CategoryID::getValue))
