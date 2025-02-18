@@ -200,6 +200,30 @@ public class CategoryMySQLGatewayTest {
     }
 
     @Test
+    public void givenPrePersistedCategories_whenCallsExistsByIds_shouldReturnIds() {
+        final var movies = Category.newCategory("Movies", null, true);
+        final var shows = Category.newCategory("Shows", null, true);
+        final var documentaries = Category.newCategory("Documentaries", null, true);
+
+        assertEquals(0, categoryRepository.count());
+
+        categoryRepository.saveAllAndFlush(List.of(
+                CategoryJpaEntity.from(movies),
+                CategoryJpaEntity.from(shows),
+                CategoryJpaEntity.from(documentaries)
+        ));
+
+        assertEquals(3, categoryRepository.count());
+
+        final var expectedIds = List.of(movies.getId(), shows.getId(), documentaries.getId());
+        final var ids = List.of(movies.getId(), shows.getId(), documentaries.getId(), CategoryID.from("123"));
+        final var actualResult = categoryGateway.existsByIds(ids);
+
+        assertEquals(expectedIds.size(), actualResult.size());
+        assertTrue(expectedIds.containsAll(actualResult));
+    }
+
+    @Test
     public void givenEmptyCategoriesTable_whenCallsFindAll_shouldReturnEmptyPage() {
         final var expectedPage = 0;
         final var expectedPerPage = 1;
