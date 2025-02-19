@@ -1,11 +1,11 @@
 package com.codeflix.admin.catalog.application.genre.update;
 
-import com.codeflix.admin.catalog.domain.category.Category;
 import com.codeflix.admin.catalog.domain.category.CategoryGateway;
 import com.codeflix.admin.catalog.domain.category.CategoryID;
 import com.codeflix.admin.catalog.domain.exceptions.DomainException;
 import com.codeflix.admin.catalog.domain.exceptions.NotFoundException;
 import com.codeflix.admin.catalog.domain.exceptions.NotificationException;
+import com.codeflix.admin.catalog.domain.genre.Genre;
 import com.codeflix.admin.catalog.domain.genre.GenreGateway;
 import com.codeflix.admin.catalog.domain.genre.GenreID;
 import com.codeflix.admin.catalog.domain.validation.Error;
@@ -81,6 +81,6 @@ public class DefaultUpdateGenreUseCase extends UpdateGenreUseCase{
     }
 
     private static Supplier<DomainException> notFound(GenreID anId) {
-        return () -> NotFoundException.with(Category.class, anId);
+        return () -> NotFoundException.with(Genre.class, anId);
     }
 }
