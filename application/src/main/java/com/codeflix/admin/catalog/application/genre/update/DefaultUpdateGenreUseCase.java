@@ -6,7 +6,6 @@ import com.codeflix.admin.catalog.domain.category.CategoryID;
 import com.codeflix.admin.catalog.domain.exceptions.DomainException;
 import com.codeflix.admin.catalog.domain.exceptions.NotFoundException;
 import com.codeflix.admin.catalog.domain.exceptions.NotificationException;
-import com.codeflix.admin.catalog.domain.genre.Genre;
 import com.codeflix.admin.catalog.domain.genre.GenreGateway;
 import com.codeflix.admin.catalog.domain.genre.GenreID;
 import com.codeflix.admin.catalog.domain.validation.Error;
@@ -41,7 +40,7 @@ public class DefaultUpdateGenreUseCase extends UpdateGenreUseCase{
                 .orElseThrow(notFound(anId));
 
         final var notification = Notification.create();
-        notification.append(validationCategories(categories));
+        notification.append(validateCategories(categories));
 
         notification.validate(() -> aGenre.update(aCommand.name(), aCommand.isActive(), categories));
 
@@ -52,7 +51,7 @@ public class DefaultUpdateGenreUseCase extends UpdateGenreUseCase{
         return UpdateGenreOutput.from(this.genreGateway.update(aGenre));
     }
 
-    private ValidationHandler validationCategories(final List<CategoryID> ids) {
+    private ValidationHandler validateCategories(final List<CategoryID> ids) {
         final var notification = Notification.create();
 
         if (ids == null || ids.isEmpty()) {
