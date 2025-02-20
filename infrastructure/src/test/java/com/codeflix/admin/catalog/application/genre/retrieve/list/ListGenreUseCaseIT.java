@@ -8,21 +8,14 @@ import com.codeflix.admin.catalog.infrastructure.genre.persistence.GenreJpaEntit
 import com.codeflix.admin.catalog.infrastructure.genre.persistence.GenreRepository;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
-import org.mockito.Mockito;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import java.util.List;
-
-import static org.mockito.ArgumentMatchers.eq;
-import static org.mockito.Mockito.times;
 
 @IntegrationTest
 public class ListGenreUseCaseIT {
     @Autowired
     private DefaultListGenreUseCase useCase;
-
-    @Autowired
-    private GenreGateway genreGateway;
 
     @Autowired
     private GenreRepository genreRepository;
