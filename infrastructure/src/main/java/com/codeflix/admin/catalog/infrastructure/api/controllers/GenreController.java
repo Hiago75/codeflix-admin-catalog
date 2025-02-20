@@ -2,12 +2,14 @@ package com.codeflix.admin.catalog.infrastructure.api.controllers;
 
 import com.codeflix.admin.catalog.application.genre.create.CreateGenreCommand;
 import com.codeflix.admin.catalog.application.genre.create.CreateGenreUseCase;
+import com.codeflix.admin.catalog.application.genre.retrieve.get.GetGenreByIdUseCase;
 import com.codeflix.admin.catalog.domain.pagination.Pagination;
 import com.codeflix.admin.catalog.infrastructure.api.GenreAPI;
 import com.codeflix.admin.catalog.infrastructure.genre.models.CreateGenreRequest;
 import com.codeflix.admin.catalog.infrastructure.genre.models.GenreListResponse;
 import com.codeflix.admin.catalog.infrastructure.genre.models.GenreResponse;
 import com.codeflix.admin.catalog.infrastructure.genre.models.UpdateGenreRequest;
+import com.codeflix.admin.catalog.infrastructure.genre.presenters.GenreApiPresenter;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -16,9 +18,14 @@ import java.net.URI;
 @RestController
 public class GenreController implements GenreAPI {
     private final CreateGenreUseCase createGenreUseCase;
+    private final GetGenreByIdUseCase getGenreByIdUseCase;
 
-    public GenreController(CreateGenreUseCase createGenreUseCase) {
+    public GenreController(
+            final CreateGenreUseCase createGenreUseCase,
+            final GetGenreByIdUseCase getGenreByIdUseCase
+    ) {
         this.createGenreUseCase = createGenreUseCase;
+        this.getGenreByIdUseCase = getGenreByIdUseCase;
     }
 
     @Override
@@ -47,7 +54,7 @@ public class GenreController implements GenreAPI {
 
     @Override
     public GenreResponse getById(final String id) {
-        return null;
+        return GenreApiPresenter.present(this.getGenreByIdUseCase.execute(id));
     }
 
     @Override
