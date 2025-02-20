@@ -3,6 +3,8 @@ package com.codeflix.admin.catalog.infrastructure.api.controllers;
 import com.codeflix.admin.catalog.application.genre.create.CreateGenreCommand;
 import com.codeflix.admin.catalog.application.genre.create.CreateGenreUseCase;
 import com.codeflix.admin.catalog.application.genre.retrieve.get.GetGenreByIdUseCase;
+import com.codeflix.admin.catalog.application.genre.update.UpdateGenreCommand;
+import com.codeflix.admin.catalog.application.genre.update.UpdateGenreUseCase;
 import com.codeflix.admin.catalog.domain.pagination.Pagination;
 import com.codeflix.admin.catalog.infrastructure.api.GenreAPI;
 import com.codeflix.admin.catalog.infrastructure.genre.models.CreateGenreRequest;
@@ -19,13 +21,16 @@ import java.net.URI;
 public class GenreController implements GenreAPI {
     private final CreateGenreUseCase createGenreUseCase;
     private final GetGenreByIdUseCase getGenreByIdUseCase;
+    private final UpdateGenreUseCase updateGenreUseCase;
 
     public GenreController(
             final CreateGenreUseCase createGenreUseCase,
-            final GetGenreByIdUseCase getGenreByIdUseCase
+            final GetGenreByIdUseCase getGenreByIdUseCase,
+            final UpdateGenreUseCase updateGenreUseCase
     ) {
         this.createGenreUseCase = createGenreUseCase;
         this.getGenreByIdUseCase = getGenreByIdUseCase;
+        this.updateGenreUseCase = updateGenreUseCase;
     }
 
     @Override
@@ -59,7 +64,16 @@ public class GenreController implements GenreAPI {
 
     @Override
     public ResponseEntity<?> updateById(final String id, final UpdateGenreRequest input) {
-        return null;
+        final var aCommand = UpdateGenreCommand.with(
+                id,
+                input.name(),
+                input.isActive(),
+                input.categories()
+        );
+
+        final var output = this.updateGenreUseCase.execute(aCommand);
+
+        return ResponseEntity.ok(output);
     }
 
     @Override
