@@ -3,6 +3,7 @@ package com.codeflix.admin.catalog.infrastructure.api;
 import com.codeflix.admin.catalog.ControllerTest;
 import com.codeflix.admin.catalog.application.genre.create.CreateGenreOutput;
 import com.codeflix.admin.catalog.application.genre.create.CreateGenreUseCase;
+import com.codeflix.admin.catalog.application.genre.delete.DeleteGenreUseCase;
 import com.codeflix.admin.catalog.application.genre.retrieve.get.GenreOutput;
 import com.codeflix.admin.catalog.application.genre.retrieve.get.GetGenreByIdUseCase;
 import com.codeflix.admin.catalog.application.genre.update.UpdateGenreOutput;
@@ -18,6 +19,7 @@ import com.codeflix.admin.catalog.infrastructure.genre.models.CreateGenreRequest
 import com.codeflix.admin.catalog.infrastructure.genre.models.UpdateGenreRequest;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.junit.jupiter.api.Test;
+import org.mockito.Mock;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.http.MediaType;
@@ -52,10 +54,13 @@ public class GenreAPITest {
     @MockBean
     private UpdateGenreUseCase updateGenreUseCase;
 
+    @MockBean
+    private DeleteGenreUseCase deleteGenreUseCase;
+
     @Test
     public void givenAValidCommand_whenCallsCreateGenre_thenShouldReturnGenreId() throws Exception {
         final var expectedName = "Action";
-        final var expectedCategories =  List.of("123", "456");
+        final var expectedCategories = List.of("123", "456");
         final var expectedIsActive = true;
         final var expectedId = "123";
 
@@ -84,7 +89,7 @@ public class GenreAPITest {
     @Test
     public void givenAInvalidName_whenCallsCreateGenre_thenShouldReturnNotification() throws Exception {
         final String expectedName = null;
-        final var expectedCategories =  List.of("123", "456");
+        final var expectedCategories = List.of("123", "456");
         final var expectedIsActive = true;
         final var expectedError = "'name' should not be null";
 
@@ -232,5 +237,20 @@ public class GenreAPITest {
                         && Objects.equals(expectedCategories, cmd.categories())
                         && Objects.equals(expectedIsActive, cmd.isActive())
         ));
+    }
+
+    @Test
+    public void givenAValidId_whenCallsDeleteGenre_shouldReturnNoContent() throws Exception {
+        final var expectedId = "123";
+
+        doNothing().when(deleteGenreUseCase).execute(any());
+
+        final var request = delete("/genres/{id}", expectedId);
+
+        final var response = this.mvc.perform(request);
+
+        response.andExpect(status().isNoContent());
+
+        verify(deleteGenreUseCase, times(1)).execute(eq(expectedId));
     }
 }
