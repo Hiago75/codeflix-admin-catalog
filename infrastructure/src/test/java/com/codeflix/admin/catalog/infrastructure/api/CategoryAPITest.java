@@ -37,7 +37,6 @@ import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.argThat;
 import static org.mockito.Mockito.*;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
-import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
 @ControllerTest(controllers = CategoryAPI.class)
@@ -79,7 +78,6 @@ public class CategoryAPITest {
                 .content(this.mapper.writeValueAsString(anApiInput));
 
         this.mvc.perform(request)
-                .andDo(print())
                 .andExpect(status().isCreated())
                 .andExpect(header().string("Location", "/categories/123"))
                 .andExpect(header().string("Content-Type", MediaType.APPLICATION_JSON_VALUE))
@@ -109,7 +107,6 @@ public class CategoryAPITest {
                 .content(this.mapper.writeValueAsString(anApiInput));
 
         this.mvc.perform(request)
-                .andDo(print())
                 .andExpect(status().isUnprocessableEntity())
                 .andExpect(header().string("Location", nullValue()))
                 .andExpect(header().string("Content-Type", MediaType.APPLICATION_JSON_VALUE))
@@ -140,7 +137,6 @@ public class CategoryAPITest {
                 .content(this.mapper.writeValueAsString(anApiInput));
 
         this.mvc.perform(request)
-                .andDo(print())
                 .andExpect(status().isUnprocessableEntity())
                 .andExpect(header().string("Location", nullValue()))
                 .andExpect(header().string("Content-Type", MediaType.APPLICATION_JSON_VALUE))
@@ -169,7 +165,7 @@ public class CategoryAPITest {
 
         final var request = get("/categories/{id}", expectedId.getValue());
 
-        final var response = this.mvc.perform(request).andDo(print());
+        final var response = this.mvc.perform(request);
 
         response.andExpect(status().isOk())
                 .andExpect(jsonPath("$.id", equalTo(expectedId.getValue())))
@@ -193,7 +189,7 @@ public class CategoryAPITest {
 
         final var request = get("/categories/{id}", expectedId.getValue());
 
-        final var response = this.mvc.perform(request).andDo(print());
+        final var response = this.mvc.perform(request);
 
         response.andExpect(status().isNotFound())
                 .andExpect(jsonPath("$.message", equalTo(expectedErrorMessage)));
@@ -216,7 +212,7 @@ public class CategoryAPITest {
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(mapper.writeValueAsString(aCommand));
 
-        final var response = this.mvc.perform(request).andDo(print());
+        final var response = this.mvc.perform(request);
 
         response.andExpect(status().isOk())
                 .andExpect(header().string("Content-Type", MediaType.APPLICATION_JSON_VALUE))
@@ -248,7 +244,7 @@ public class CategoryAPITest {
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(mapper.writeValueAsString(aCommand));
 
-        final var response = this.mvc.perform(request).andDo(print());
+        final var response = this.mvc.perform(request);
 
         response.andExpect(status().isNotFound())
                 .andExpect(jsonPath("$.message", equalTo(expectedErrorMessage)));
@@ -275,7 +271,7 @@ public class CategoryAPITest {
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(mapper.writeValueAsString(aCommand));
 
-        final var response = this.mvc.perform(request).andDo(print());
+        final var response = this.mvc.perform(request);
 
         response.andExpect(status().isUnprocessableEntity())
                 .andExpect(header().string("Content-Type", MediaType.APPLICATION_JSON_VALUE))
@@ -294,7 +290,7 @@ public class CategoryAPITest {
 
         final var request = delete("/categories/{id}", expectedId);
 
-        final var response = this.mvc.perform(request).andDo(print());
+        final var response = this.mvc.perform(request);
 
         response.andExpect(status().isNoContent());
 
@@ -324,7 +320,7 @@ public class CategoryAPITest {
                 .queryParam("dir", expectedDirection)
                 .queryParam("search", expectedTerms);
 
-        final var response = this.mvc.perform(request).andDo(print());
+        final var response = this.mvc.perform(request);
 
         response.andExpect(status().isOk())
                 .andExpect(jsonPath("$.current_page", equalTo(expectedPage)))
