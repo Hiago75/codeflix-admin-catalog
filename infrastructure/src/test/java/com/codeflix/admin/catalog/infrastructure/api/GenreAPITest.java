@@ -6,6 +6,8 @@ import com.codeflix.admin.catalog.application.genre.create.CreateGenreUseCase;
 import com.codeflix.admin.catalog.application.genre.delete.DeleteGenreUseCase;
 import com.codeflix.admin.catalog.application.genre.retrieve.get.GenreOutput;
 import com.codeflix.admin.catalog.application.genre.retrieve.get.GetGenreByIdUseCase;
+import com.codeflix.admin.catalog.application.genre.retrieve.list.GenreListOutput;
+import com.codeflix.admin.catalog.application.genre.retrieve.list.ListGenreUseCase;
 import com.codeflix.admin.catalog.application.genre.update.UpdateGenreOutput;
 import com.codeflix.admin.catalog.application.genre.update.UpdateGenreUseCase;
 import com.codeflix.admin.catalog.domain.category.CategoryID;
@@ -13,13 +15,13 @@ import com.codeflix.admin.catalog.domain.exceptions.NotFoundException;
 import com.codeflix.admin.catalog.domain.exceptions.NotificationException;
 import com.codeflix.admin.catalog.domain.genre.Genre;
 import com.codeflix.admin.catalog.domain.genre.GenreID;
+import com.codeflix.admin.catalog.domain.pagination.Pagination;
 import com.codeflix.admin.catalog.domain.validation.Error;
 import com.codeflix.admin.catalog.domain.validation.handler.Notification;
 import com.codeflix.admin.catalog.infrastructure.genre.models.CreateGenreRequest;
 import com.codeflix.admin.catalog.infrastructure.genre.models.UpdateGenreRequest;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.junit.jupiter.api.Test;
-import org.mockito.Mock;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.http.MediaType;
@@ -56,6 +58,9 @@ public class GenreAPITest {
 
     @MockBean
     private DeleteGenreUseCase deleteGenreUseCase;
+
+    @MockBean
+    private ListGenreUseCase listGenreUseCase;
 
     @Test
     public void givenAValidCommand_whenCallsCreateGenre_thenShouldReturnGenreId() throws Exception {
@@ -252,5 +257,52 @@ public class GenreAPITest {
         response.andExpect(status().isNoContent());
 
         verify(deleteGenreUseCase, times(1)).execute(eq(expectedId));
+    }
+
+    @Test
+    public void givenAValidQuery_whenCallsListGenre_shouldReturnGenres() throws Exception {
+        final var aGenre =  Genre.newGenre("Action", true);
+
+        final var expectedPage = 0;
+        final var expectedPerPage = 10;
+        final var expectedTerms = "A";
+        final var expectedSort = "name";
+        final var expectedDirection = "asc";
+
+        final var expectedItemsCount = 1;
+        final var expectedTotal = 1;
+
+        final var expectedItems = List.of(GenreListOutput.from(aGenre));
+
+        when(listGenreUseCase.execute(any()))
+                .thenReturn(new Pagination<>(expectedPage, expectedPerPage, expectedTotal, expectedItems));
+
+        final var request = get("/genres")
+                .queryParam("page", String.valueOf(expectedPage))
+                .queryParam("perPage", String.valueOf(expectedPerPage))
+                .queryParam("sort", expectedSort)
+                .queryParam("dir", expectedDirection)
+                .queryParam("search", expectedTerms);
+
+        final var response = this.mvc.perform(request);
+
+        response.andExpect(status().isOk())
+                .andExpect(jsonPath("$.current_page", equalTo(expectedPage)))
+                .andExpect(jsonPath("$.per_page", equalTo(expectedPerPage)))
+                .andExpect(jsonPath("$.total", equalTo(expectedTotal)))
+                .andExpect(jsonPath("$.items", hasSize(expectedItemsCount)))
+                .andExpect(jsonPath("$.items[0].id", equalTo(aGenre.getId().getValue())))
+                .andExpect(jsonPath("$.items[0].name", equalTo(aGenre.getName())))
+                .andExpect(jsonPath("$.items[0].is_active", equalTo(aGenre.isActive())))
+                .andExpect(jsonPath("$.items[0].created_at", equalTo(aGenre.getCreatedAt().toString())))
+                .andExpect(jsonPath("$.items[0].deleted_at", equalTo(aGenre.getDeletedAt())));
+
+        verify(listGenreUseCase, times(1)).execute(argThat(query ->
+                Objects.equals(expectedPage, query.page())
+                        && Objects.equals(expectedPerPage, query.perPage())
+                        && Objects.equals(expectedDirection, query.direction())
+                        && Objects.equals(expectedSort, query.sort())
+                        && Objects.equals(expectedTerms, query.terms())
+        ));
     }
 }
