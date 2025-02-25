@@ -1,9 +1,8 @@
 package com.codeflix.admin.catalog.e2e.category;
 
 import com.codeflix.admin.catalog.E2ETest;
-import com.codeflix.admin.catalog.domain.category.CategoryID;
+import com.codeflix.admin.catalog.e2e.MockDsl;
 import com.codeflix.admin.catalog.infrastructure.category.models.CategoryResponse;
-import com.codeflix.admin.catalog.infrastructure.category.models.CreateCategoryRequest;
 import com.codeflix.admin.catalog.infrastructure.category.models.UpdateCategoryRequest;
 import com.codeflix.admin.catalog.infrastructure.category.persistance.CategoryRepository;
 import com.codeflix.admin.catalog.infrastructure.configuration.json.Json;
@@ -27,7 +26,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 
 @E2ETest
 @Testcontainers
-public class CategoryE2ETest {
+public class CategoryE2ETest implements MockDsl {
 
     @Autowired
     private MockMvc mvc;
@@ -44,6 +43,11 @@ public class CategoryE2ETest {
     @DynamicPropertySource
     public static void setDatasourceProperties(final DynamicPropertyRegistry registry) {
         registry.add("mysql.port", () -> MYSQL_CONTAINER.getMappedPort(3306));
+    }
+
+    @Override
+    public MockMvc mvc() {
+        return this.mvc;
     }
 
     @Test
@@ -299,22 +303,6 @@ public class CategoryE2ETest {
                 .queryParam("dir", directions);
 
         return this.mvc.perform(aRequest);
-    }
-
-    private CategoryID givenACategory(final String aName, final String aDescription, final boolean isActive) throws Exception {
-        final var aRequestBody = new CreateCategoryRequest(aName, aDescription, isActive);
-
-        final var aRequest = MockMvcRequestBuilders.post("/categories")
-                .contentType(MediaType.APPLICATION_JSON)
-                .content(Json.writeValueAsString(aRequestBody));
-
-        final var actualId = this.mvc.perform(aRequest)
-                .andExpect(status().isCreated())
-                .andReturn()
-                .getResponse().getHeader("Location")
-                .replace("/categories/", "");
-
-        return CategoryID.from(actualId);
     }
 
     private CategoryResponse retrieveACategory(final String anId) throws Exception {
