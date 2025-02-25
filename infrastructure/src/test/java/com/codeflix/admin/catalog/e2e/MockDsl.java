@@ -8,6 +8,7 @@ import com.codeflix.admin.catalog.infrastructure.category.models.CreateCategoryR
 import com.codeflix.admin.catalog.infrastructure.category.models.UpdateCategoryRequest;
 import com.codeflix.admin.catalog.infrastructure.configuration.json.Json;
 import com.codeflix.admin.catalog.infrastructure.genre.models.CreateGenreRequest;
+import com.codeflix.admin.catalog.infrastructure.genre.models.GenreResponse;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.ResultActions;
@@ -75,6 +76,10 @@ public interface MockDsl {
         return listGenres(page, perPage, "", "", "");
     }
 
+    default GenreResponse retrieveAGenre(final Identifier anId) throws Exception {
+        return this.retrieve("/genres", anId, GenreResponse.class);
+    }
+
 
     default  <A, D> List<D> mapTo(final List<A> actual, final Function<A, D> mapper) {
         return actual.stream().map(mapper).toList();
@@ -111,7 +116,9 @@ public interface MockDsl {
     }
 
     private <T> T retrieve(final String url, final Identifier anId, final  Class<T> clazz) throws Exception {
-        final var aRequest = MockMvcRequestBuilders.get("%s/".formatted(url) + anId.getValue());
+        final var aRequest = MockMvcRequestBuilders.get("%s/".formatted(url) + anId.getValue())
+                .accept(MediaType.APPLICATION_JSON_UTF8)
+                .contentType(MediaType.APPLICATION_JSON_UTF8);
 
         final var json = this.mvc().perform(aRequest)
                 .andExpect(status().isOk())
