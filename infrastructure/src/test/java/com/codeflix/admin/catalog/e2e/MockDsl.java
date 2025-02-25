@@ -9,6 +9,7 @@ import com.codeflix.admin.catalog.infrastructure.category.models.UpdateCategoryR
 import com.codeflix.admin.catalog.infrastructure.configuration.json.Json;
 import com.codeflix.admin.catalog.infrastructure.genre.models.CreateGenreRequest;
 import com.codeflix.admin.catalog.infrastructure.genre.models.GenreResponse;
+import com.codeflix.admin.catalog.infrastructure.genre.models.UpdateGenreRequest;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.ResultActions;
@@ -80,6 +81,9 @@ public interface MockDsl {
         return this.retrieve("/genres", anId, GenreResponse.class);
     }
 
+    default ResultActions updateAGenre(final Identifier anId, final UpdateGenreRequest aRequest) throws Exception {
+        return this.update("/genres", anId, aRequest);
+    }
 
     default  <A, D> List<D> mapTo(final List<A> actual, final Function<A, D> mapper) {
         return actual.stream().map(mapper).toList();
