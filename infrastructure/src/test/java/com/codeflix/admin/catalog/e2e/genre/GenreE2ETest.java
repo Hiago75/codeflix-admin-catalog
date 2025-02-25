@@ -9,6 +9,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.test.context.DynamicPropertyRegistry;
 import org.springframework.test.context.DynamicPropertySource;
 import org.springframework.test.web.servlet.MockMvc;
+import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 import org.testcontainers.containers.MySQLContainer;
 import org.testcontainers.junit.jupiter.Container;
 import org.testcontainers.junit.jupiter.Testcontainers;
@@ -96,7 +97,7 @@ public class GenreE2ETest implements MockDsl {
     }
 
     @Test
-    public void asACatalogAdminIShouldBeAbleToNavigateToAllCategories() throws Exception {
+    public void asACatalogAdminIShouldBeAbleToNavigateToAllGenres() throws Exception {
         assertTrue(MYSQL_CONTAINER.isRunning());
         assertEquals(0, genreRepository.count());
 
@@ -130,7 +131,7 @@ public class GenreE2ETest implements MockDsl {
     }
 
     @Test
-    public void asACatalogAdminIShouldBeAbleToSearchBetweenAllCategories() throws Exception {
+    public void asACatalogAdminIShouldBeAbleToSearchBetweenAllGenres() throws Exception {
         assertTrue(MYSQL_CONTAINER.isRunning());
         assertEquals(0, genreRepository.count());
 
@@ -148,7 +149,7 @@ public class GenreE2ETest implements MockDsl {
     }
 
     @Test
-    public void asACatalogAdminIShouldBeAbleToSortAllCategoriesByDescriptionDesc() throws Exception {
+    public void asACatalogAdminIShouldBeAbleToSortAllGenresByDescriptionDesc() throws Exception {
         assertTrue(MYSQL_CONTAINER.isRunning());
         assertEquals(0, genreRepository.count());
 
@@ -165,5 +166,42 @@ public class GenreE2ETest implements MockDsl {
                 .andExpect(jsonPath("$.items[0].name", equalTo("Sports")))
                 .andExpect(jsonPath("$.items[1].name", equalTo("Drama")))
                 .andExpect(jsonPath("$.items[2].name", equalTo("Action")));
+    }
+
+    @Test
+    public void asACatalogAdminIShouldBeAbleToRetrieveAGenreByItsIdentifier() throws Exception {
+        assertTrue(MYSQL_CONTAINER.isRunning());
+        assertEquals(0, genreRepository.count());
+
+        final var movies = givenACategory("Movies", null, true);
+        final var expectedName = "Action";
+        final var expectedCategories = List.of(movies);
+        final var expectedIsActive = true;
+
+        final var actualId = givenAGenre(expectedName, expectedCategories, expectedIsActive);
+
+        final var actualGenre = retrieveAGenre(actualId);
+
+        assertEquals(expectedName, actualGenre.name());
+        assertTrue(
+                expectedCategories.size() == actualGenre.categories().size()
+                        && mapTo(expectedCategories, CategoryID::getValue).containsAll(actualGenre.categories())
+        );
+        assertEquals(expectedIsActive, actualGenre.active());
+        assertNotNull(actualGenre.createdAt());
+        assertNotNull(actualGenre.updatedAt());
+        assertNull(actualGenre.deletedAt());
+    }
+
+    @Test
+    public void asACatalogAdminIShouldBeAbleToSeeATreatedErrorByRetrievingANotFoundGenre() throws Exception {
+        assertTrue(MYSQL_CONTAINER.isRunning());
+        assertEquals(0, genreRepository.count());
+
+        final var aRequest = MockMvcRequestBuilders.get("/genres/123");
+
+        this.mvc.perform(aRequest)
+                .andExpect(status().isNotFound())
+                .andExpect(jsonPath("$.message", equalTo("Genre with ID 123 was not found")));
     }
 }
