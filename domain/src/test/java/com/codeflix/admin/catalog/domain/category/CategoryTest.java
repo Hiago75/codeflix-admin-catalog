@@ -75,12 +75,12 @@ public class CategoryTest {
     @Test
     public void givenAnInvalidNameLengthGreaterThan255_whenCallNewCategoryAndValidate_thenShouldReceiveError() {
         final var expectedErrorCount = 1;
-        final var expectedEmptyName = "N".repeat(300);
+        final var expectedLargeName = "N".repeat(300);
         final var expectedErrorMessage = "'name' must be between 3 and 255 characters";
         final var expectedDescription = "Most watched category";
         final var expectedIsActive = true;
 
-        final var actualCategory = Category.newCategory(expectedEmptyName, expectedDescription, expectedIsActive);
+        final var actualCategory = Category.newCategory(expectedLargeName, expectedDescription, expectedIsActive);
 
         final var actualException = assertThrows(DomainException.class, () -> actualCategory.validate(new ThrowsValidationHandler()));
 
