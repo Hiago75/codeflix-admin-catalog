@@ -5,9 +5,9 @@ import com.codeflix.admin.catalog.domain.validation.ValidationHandler;
 import com.codeflix.admin.catalog.domain.validation.Validator;
 
 public class CategoryValidator extends Validator {
-    public static final int NAME_MIN_LENGTH = 3;
-    public static final int NAME_MAX_LENGTH = 255;
     private final Category category;
+    private static final int NAME_MIN_LENGTH = 3;
+    private static final int NAME_MAX_LENGTH = 255;
 
     public CategoryValidator(final Category aCategory, final ValidationHandler aHandler) {
         super(aHandler);
