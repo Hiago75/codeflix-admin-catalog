@@ -3,6 +3,8 @@ package com.codeflix.admin.catalog.infrastructure.castmember;
 import com.codeflix.admin.catalog.Fixture;
 import com.codeflix.admin.catalog.domain.castmember.CastMember;
 import com.codeflix.admin.catalog.MySQLGatewayTest;
+import com.codeflix.admin.catalog.domain.castmember.CastMemberType;
+import com.codeflix.admin.catalog.infrastructure.castmember.persistence.CastMemberJpaEntity;
 import com.codeflix.admin.catalog.infrastructure.castmember.persistence.CastMemberRepository;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -34,7 +36,7 @@ public class CastMemberMySQLGatewayTest {
         assertEquals(expectedName, actualMember.getName());
         assertEquals(expectedType, actualMember.getType());
         assertEquals(aMember.getCreatedAt(), actualMember.getCreatedAt());
-        assertEquals(aMember.getCreatedAt(), actualMember.getUpdatedAt());
+        assertEquals(aMember.getUpdatedAt(), actualMember.getUpdatedAt());
 
         final var persistedMember = castMemberRepository.findById(expectedId.getValue()).get();
 
@@ -42,6 +44,40 @@ public class CastMemberMySQLGatewayTest {
         assertEquals(expectedName, persistedMember.getName());
         assertEquals(expectedType, persistedMember.getType());
         assertEquals(aMember.getCreatedAt(), persistedMember.getCreatedAt());
-        assertEquals(aMember.getCreatedAt(), persistedMember.getUpdatedAt());
+        assertEquals(aMember.getUpdatedAt(), persistedMember.getUpdatedAt());
+    }
+
+    @Test
+    public void givenAValidCastMember_whenCallsUpdate_shouldPersistIt() {
+        final var expectedName = Fixture.name();
+        final var expectedType = CastMemberType.ACTOR;
+
+        final var aMember = CastMember.newMember("Random", CastMemberType.DIRECTOR);
+        final var expectedId = aMember.getId();
+
+        final var currentMember = castMemberRepository.saveAndFlush(CastMemberJpaEntity.from(aMember));
+
+        assertEquals(1, castMemberRepository.count());
+        assertEquals("Random", currentMember.getName());
+        assertEquals(CastMemberType.DIRECTOR, currentMember.getType());
+
+        final var actualMember = castMemberMySQLGateway.update(
+                CastMember.with(aMember).update(expectedName, expectedType)
+        );
+
+        assertEquals(1, castMemberRepository.count());
+        assertEquals(expectedId, actualMember.getId());
+        assertEquals(expectedName, actualMember.getName());
+        assertEquals(expectedType, actualMember.getType());
+        assertEquals(aMember.getCreatedAt(), actualMember.getCreatedAt());
+        assertTrue(aMember.getUpdatedAt().isBefore(actualMember.getUpdatedAt()));
+
+        final var persistedMember = castMemberRepository.findById(expectedId.getValue()).get();
+
+        assertEquals(expectedId.getValue(), persistedMember.getId());
+        assertEquals(expectedName, persistedMember.getName());
+        assertEquals(expectedType, persistedMember.getType());
+        assertEquals(aMember.getCreatedAt(), persistedMember.getCreatedAt());
+        assertTrue(aMember.getUpdatedAt().isBefore(persistedMember.getUpdatedAt()));
     }
 }
