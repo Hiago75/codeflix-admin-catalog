@@ -8,7 +8,7 @@ import java.time.Instant;
 import java.time.temporal.ChronoUnit;
 import java.util.Objects;
 
-public class Category extends AggregateRoot<CategoryID> implements Cloneable{
+public class Category extends AggregateRoot<CategoryID> implements Cloneable {
    private String name;
    private String description;
    private boolean active;
@@ -17,25 +17,32 @@ public class Category extends AggregateRoot<CategoryID> implements Cloneable{
    private Instant deletedAt;
 
    private Category(
-     final CategoryID anId,
-     final String aName,
-     final String aDescription,
-     final boolean isActive,
-     final Instant aCreationDate,
-     final Instant aUpdateDate,
-     final Instant aDeleteDate
+           final CategoryID anId,
+           final String aName,
+           final String aDescription,
+           final boolean isActive,
+           final Instant aCreationDate,
+           final Instant aUpdateDate,
+           final Instant aDeleteDate
    ) {
       super(anId);
       this.name = aName;
       this.description = aDescription;
       this.active = isActive;
       this.createdAt = Objects.requireNonNull(aCreationDate, "'createdAt' should not be null");
-      this.updatedAt = Objects.requireNonNull(aUpdateDate, "'createdAt' should not be null");
+      this.updatedAt = Objects.requireNonNull(aUpdateDate, "'updatedAt' should not be null");
       this.deletedAt = aDeleteDate;
    }
 
+   public static Category newCategory(final String aName, final String aDescription, final boolean isActive) {
+      final var id = CategoryID.unique();
+      final var now = InstantUtils.now();
+      final var deletedAt = isActive ? null : now;
+      return new Category(id, aName, aDescription, isActive, now, now, deletedAt);
+   }
+
    public static Category with(
-           final CategoryID id,
+           final CategoryID anId,
            final String name,
            final String description,
            final boolean active,
@@ -44,7 +51,7 @@ public class Category extends AggregateRoot<CategoryID> implements Cloneable{
            final Instant deletedAt
    ) {
       return new Category(
-              id,
+              anId,
               name,
               description,
               active,
@@ -54,17 +61,28 @@ public class Category extends AggregateRoot<CategoryID> implements Cloneable{
       );
    }
 
-   public static Category newCategory(final String aName, final String aDescription, final boolean isActive) {
-      final var id = CategoryID.unique();
-      final var now = InstantUtils.now();
-      final var deletedAt = isActive ? null : now;
-
-      return with(id, aName, aDescription, isActive, now, now, deletedAt);
+   public static Category with(final Category aCategory) {
+      return with(
+              aCategory.getId(),
+              aCategory.name,
+              aCategory.description,
+              aCategory.isActive(),
+              aCategory.createdAt,
+              aCategory.updatedAt,
+              aCategory.deletedAt
+      );
    }
 
    @Override
    public void validate(final ValidationHandler handler) {
       new CategoryValidator(this, handler).validate();
+   }
+
+   public Category activate() {
+      this.deletedAt = null;
+      this.active = true;
+      this.updatedAt = InstantUtils.now();
+      return this;
    }
 
    public Category deactivate() {
@@ -74,29 +92,22 @@ public class Category extends AggregateRoot<CategoryID> implements Cloneable{
 
       this.active = false;
       this.updatedAt = InstantUtils.now();
-
       return this;
    }
 
-   public Category activate() {
-      this.deletedAt = null;
-      this.active = true;
-      this.updatedAt = InstantUtils.now();
-
-      return this;
-   }
-
-   public Category update(final String aName, final String aDescription, final boolean isActive) {
+   public Category update(
+           final String aName,
+           final String aDescription,
+           final boolean isActive
+   ) {
       if (isActive) {
          activate();
       } else {
          deactivate();
       }
-
       this.name = aName;
       this.description = aDescription;
-      this.updatedAt = InstantUtils.now();
-
+      this.updatedAt = Instant.now();
       return this;
    }
 
@@ -117,27 +128,23 @@ public class Category extends AggregateRoot<CategoryID> implements Cloneable{
    }
 
    public Instant getCreatedAt() {
-      return createdAt.truncatedTo(ChronoUnit.MICROS);
+      return createdAt;
    }
 
    public Instant getUpdatedAt() {
-      return updatedAt.truncatedTo(ChronoUnit.MICROS);
+      return updatedAt;
    }
 
    public Instant getDeletedAt() {
-      if (deletedAt != null ){
-         return deletedAt.truncatedTo(ChronoUnit.MICROS);
-      }
-
-      return null;
+      return deletedAt;
    }
 
-    @Override
-    public Category clone() {
-        try {
-            return (Category) super.clone();
-        } catch (CloneNotSupportedException e) {
-            throw new AssertionError();
-        }
-    }
+   @Override
+   public Category clone() {
+      try {
+         return (Category) super.clone();
+      } catch (CloneNotSupportedException e) {
+         throw new AssertionError();
+      }
+   }
 }

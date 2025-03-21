@@ -12,7 +12,9 @@ import java.time.Instant;
 @Entity(name = "Category")
 @Table(name = "categories")
 public class CategoryJpaEntity {
+
     @Id
+    @Column(name = "id", nullable = false)
     private String id;
 
     @Column(name = "name", nullable = false)
@@ -33,7 +35,8 @@ public class CategoryJpaEntity {
     @Column(name = "deleted_at", columnDefinition = "DATETIME(6)")
     private Instant deletedAt;
 
-    public CategoryJpaEntity() {}
+    public CategoryJpaEntity() {
+    }
 
     private CategoryJpaEntity(
             final String id,
@@ -53,7 +56,7 @@ public class CategoryJpaEntity {
         this.deletedAt = deletedAt;
     }
 
-    public static CategoryJpaEntity from (final Category aCategory) {
+    public static CategoryJpaEntity from(final Category aCategory) {
         return new CategoryJpaEntity(
                 aCategory.getId().getValue(),
                 aCategory.getName(),
@@ -65,7 +68,7 @@ public class CategoryJpaEntity {
         );
     }
 
-    public Category toAggregate () {
+    public Category toAggregate() {
         return Category.with(
                 CategoryID.from(getId()),
                 getName(),
@@ -76,7 +79,6 @@ public class CategoryJpaEntity {
                 getDeletedAt()
         );
     }
-
 
     public String getId() {
         return id;
