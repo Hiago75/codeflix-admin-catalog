@@ -83,6 +83,40 @@ public class CastMemberMySQLGatewayTest {
     }
 
     @Test
+    public void givenAValidCastMember_whenCallsFindById_shouldReturnIt() {
+        final var expectedName = Fixture.name();
+        final var expectedType = Fixture.CastMember.type();
+
+        final var aMember = CastMember.newMember(expectedName, expectedType);
+        final var expectedId = aMember.getId();
+
+        castMemberRepository.saveAndFlush(CastMemberJpaEntity.from(aMember));
+
+        assertEquals(1, castMemberRepository.count());
+
+        final var actualMember = castMemberMySQLGateway.findById(expectedId).get();
+
+        assertEquals(expectedId, actualMember.getId());
+        assertEquals(expectedName, actualMember.getName());
+        assertEquals(expectedType, actualMember.getType());
+        assertEquals(aMember.getCreatedAt(), actualMember.getCreatedAt());
+        assertEquals(aMember.getUpdatedAt(), actualMember.getUpdatedAt());
+    }
+
+    @Test
+    public void givenAnInvalidId_whenCallsFindById_shouldReturnEmpty() {
+        final var aMember = CastMember.newMember(Fixture.name(), Fixture.CastMember.type());
+
+        castMemberRepository.saveAndFlush(CastMemberJpaEntity.from(aMember));
+
+        assertEquals(1, castMemberRepository.count());
+
+        final var actualMember = castMemberMySQLGateway.findById(CastMemberID.from("123"));
+
+        assertTrue(actualMember.isEmpty());
+    }
+
+    @Test
     public void givenAValidCastMember_whenCallsDeleteById_shouldDeleteIt() {
         final var aMember = CastMember.newMember(Fixture.name(), Fixture.CastMember.type());
 
