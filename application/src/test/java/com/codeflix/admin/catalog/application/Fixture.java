@@ -1,7 +1,7 @@
 package com.codeflix.admin.catalog.application;
 
 import com.codeflix.admin.catalog.domain.castmember.CastMemberType;
-import com.github.javafaker.Faker;
+import net.datafaker.Faker;
 
 public final class Fixture {
     private static final Faker FAKER = new Faker();

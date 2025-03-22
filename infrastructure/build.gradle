@@ -47,7 +47,7 @@ dependencies {
 
     implementation('com.fasterxml.jackson.module:jackson-module-afterburner')
 
-    testImplementation("com.navercorp.fixturemonkey:fixture-monkey-starter:1.1.10")
+    testImplementation("net.datafaker:datafaker:2.4.2")
     testImplementation('org.testcontainers:testcontainers:1.19.8')
     testImplementation('org.testcontainers:mysql:1.19.8')
     testImplementation('org.testcontainers:junit-jupiter:1.19.8')

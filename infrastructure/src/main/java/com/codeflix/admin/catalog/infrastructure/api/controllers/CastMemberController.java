@@ -46,7 +46,7 @@ public class CastMemberController implements CastMemberAPI {
 
     @Override
     public ResponseEntity<?> createCastsMember(final CreateCastMemberRequest input) {
-        final var aCommand = CreateCastMemberCommand.with(input.name(), input.castMemberType());
+        final var aCommand = CreateCastMemberCommand.with(input.name(), input.type());
 
         final var output = this.createCastMemberUseCase.execute(aCommand);
 
@@ -72,7 +72,7 @@ public class CastMemberController implements CastMemberAPI {
 
     @Override
     public ResponseEntity<?> updateById(final String id, final UpdateCastMemberRequest aBody) {
-        final var aCommand = UpdateCastMemberCommand.with(id, aBody.name(), aBody.castMemberType());
+        final var aCommand = UpdateCastMemberCommand.with(id, aBody.name(), aBody.type());
 
         final var output = this.updateCastMemberUseCase.execute(aCommand);
 
