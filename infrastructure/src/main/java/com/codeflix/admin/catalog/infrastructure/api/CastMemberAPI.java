@@ -1,6 +1,7 @@
 package com.codeflix.admin.catalog.infrastructure.api;
 
 import com.codeflix.admin.catalog.domain.pagination.Pagination;
+import com.codeflix.admin.catalog.infrastructure.castmember.models.CastMemberListResponse;
 import com.codeflix.admin.catalog.infrastructure.castmember.models.CastMemberResponse;
 import com.codeflix.admin.catalog.infrastructure.castmember.models.CreateCastMemberRequest;
 import com.codeflix.admin.catalog.infrastructure.castmember.models.UpdateCastMemberRequest;
@@ -36,7 +37,7 @@ public interface CastMemberAPI {
             @ApiResponse(responseCode = "422", description = "A invalid parameter was received"),
             @ApiResponse(responseCode = "500", description = "An unexpected server error occurred")
     })
-    Pagination<Object> listCastMembers(
+    Pagination<CastMemberListResponse> listCastMembers(
             @RequestParam(name = "search", required = false, defaultValue = "") final String search,
             @RequestParam(name = "page", required = false, defaultValue = "0") final int page,
             @RequestParam(name = "perPage", required = false, defaultValue = "10") final int perPage,

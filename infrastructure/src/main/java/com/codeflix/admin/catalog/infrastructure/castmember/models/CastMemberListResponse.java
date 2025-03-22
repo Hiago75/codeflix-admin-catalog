@@ -5,11 +5,10 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 
 import java.time.Instant;
 
-public record CastMemberResponse(
+public record CastMemberListResponse(
         String id,
         String name,
         CastMemberType type,
-        @JsonProperty("created_at") Instant createdAt,
-        @JsonProperty("updated_at") Instant updatedAt
+        @JsonProperty("created_at") Instant createdAt
 ) {
 }
