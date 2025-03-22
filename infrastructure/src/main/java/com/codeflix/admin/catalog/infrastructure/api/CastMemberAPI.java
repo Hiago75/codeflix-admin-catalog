@@ -1,6 +1,7 @@
 package com.codeflix.admin.catalog.infrastructure.api;
 
 import com.codeflix.admin.catalog.domain.pagination.Pagination;
+import com.codeflix.admin.catalog.infrastructure.castmember.models.CastMemberResponse;
 import com.codeflix.admin.catalog.infrastructure.castmember.models.CreateCastMemberRequest;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
@@ -49,7 +50,7 @@ public interface CastMemberAPI {
             @ApiResponse(responseCode = "404", description = "Cast member was not found"),
             @ApiResponse(responseCode = "500", description = "An unexpected server error occurred")
     })
-    Object getById(@PathVariable(name = "id") String id);
+    CastMemberResponse getById(@PathVariable(name = "id") String id);
 
     @PutMapping(
             value = "{id}",
