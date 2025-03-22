@@ -1,8 +1,13 @@
 package com.codeflix.admin.catalog.e2e;
 
 import com.codeflix.admin.catalog.domain.Identifier;
+import com.codeflix.admin.catalog.domain.castmember.CastMemberID;
+import com.codeflix.admin.catalog.domain.castmember.CastMemberType;
 import com.codeflix.admin.catalog.domain.category.CategoryID;
 import com.codeflix.admin.catalog.domain.genre.GenreID;
+import com.codeflix.admin.catalog.infrastructure.castmember.models.CastMemberResponse;
+import com.codeflix.admin.catalog.infrastructure.castmember.models.CreateCastMemberRequest;
+import com.codeflix.admin.catalog.infrastructure.castmember.models.UpdateCastMemberRequest;
 import com.codeflix.admin.catalog.infrastructure.category.models.CategoryResponse;
 import com.codeflix.admin.catalog.infrastructure.category.models.CreateCategoryRequest;
 import com.codeflix.admin.catalog.infrastructure.category.models.UpdateCategoryRequest;
@@ -18,6 +23,8 @@ import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 import java.util.List;
 import java.util.function.Function;
 
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 public interface MockDsl {
@@ -93,8 +100,56 @@ public interface MockDsl {
         return actual.stream().map(mapper).toList();
     }
 
+    default ResultActions deleteACastMember(final CastMemberID anId) throws Exception {
+        return this.delete("/cast_members/", anId);
+    }
+
+    default CastMemberID givenACastMember(final String aName, final CastMemberType aType) throws Exception {
+        final var aRequestBody = new CreateCastMemberRequest(aName, aType);
+        final var actualId = this.given("/cast_members", aRequestBody);
+        return CastMemberID.from(actualId);
+    }
+
+    default ResultActions givenACastMemberResult(final String aName, final CastMemberType aType) throws Exception {
+        final var aRequestBody = new CreateCastMemberRequest(aName, aType);
+        return this.givenResult("/cast_members", aRequestBody);
+    }
+
+    private ResultActions givenResult(final String url, final Object body) throws Exception {
+        final var aRequest = post(url)
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(Json.writeValueAsString(body));
+
+        return this.mvc().perform(aRequest);
+    }
+
+    default ResultActions listCastMembers(final int page, final int perPage) throws Exception {
+        return listCastMembers(page, perPage, "", "", "");
+    }
+
+    default ResultActions listCastMembers(final int page, final int perPage, final String search) throws Exception {
+        return listCastMembers(page, perPage, search, "", "");
+    }
+
+    default ResultActions listCastMembers(final int page, final int perPage, final String search, final String sort, final String direction) throws Exception {
+        return this.list("/cast_members", page, perPage, search, sort, direction);
+    }
+
+    default CastMemberResponse retrieveACastMember(final CastMemberID anId) throws Exception {
+        return this.retrieve("/cast_members/", anId, CastMemberResponse.class);
+    }
+
+    default ResultActions retrieveACastMemberResult(final CastMemberID anId) throws Exception {
+        return this.retrieveResult("/cast_members/", anId);
+    }
+
+    default ResultActions updateACastMember(final CastMemberID anId, final String aName, final CastMemberType aType) throws Exception {
+        return this.update("/cast_members/", anId, new UpdateCastMemberRequest(aName, aType));
+    }
+
+
     private String given(final String url, final Object body) throws Exception {
-        final var aRequest = MockMvcRequestBuilders.post(url)
+        final var aRequest = post(url)
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(Json.writeValueAsString(body));
 
@@ -134,6 +189,14 @@ public interface MockDsl {
                 .getResponse().getContentAsString();
 
         return Json.readValue(json, clazz);
+    }
+
+    private ResultActions retrieveResult(final String url, final Identifier anId) throws Exception {
+        final var aRequest = get(url + anId.getValue())
+                .accept(MediaType.APPLICATION_JSON_UTF8)
+                .contentType(MediaType.APPLICATION_JSON_UTF8);
+
+        return this.mvc().perform(aRequest);
     }
 
     private ResultActions delete(final String url, final Identifier anid) throws Exception {
