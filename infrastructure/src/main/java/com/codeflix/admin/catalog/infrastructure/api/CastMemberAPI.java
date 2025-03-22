@@ -3,6 +3,7 @@ package com.codeflix.admin.catalog.infrastructure.api;
 import com.codeflix.admin.catalog.domain.pagination.Pagination;
 import com.codeflix.admin.catalog.infrastructure.castmember.models.CastMemberResponse;
 import com.codeflix.admin.catalog.infrastructure.castmember.models.CreateCastMemberRequest;
+import com.codeflix.admin.catalog.infrastructure.castmember.models.UpdateCastMemberRequest;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
@@ -60,10 +61,11 @@ public interface CastMemberAPI {
     @Operation(summary = "Update a specific cast member by its identifier")
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "Cast member update successfully"),
+            @ApiResponse(responseCode = "404", description = "Cast member not found"),
             @ApiResponse(responseCode = "422", description = "A validation error was thrown"),
             @ApiResponse(responseCode = "500", description = "An unexpected server error occurred")
     })
-    ResponseEntity<?> updateById(@PathVariable(name = "id") String id, @RequestBody @Valid Object input);
+    ResponseEntity<?> updateById(@PathVariable(name = "id") String id, @RequestBody @Valid UpdateCastMemberRequest input);
 
     @DeleteMapping(value = "{id}")
     @ResponseStatus(HttpStatus.NO_CONTENT)

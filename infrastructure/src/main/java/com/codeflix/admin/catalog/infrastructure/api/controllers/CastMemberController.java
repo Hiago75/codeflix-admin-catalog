@@ -3,10 +3,13 @@ package com.codeflix.admin.catalog.infrastructure.api.controllers;
 import com.codeflix.admin.catalog.application.castmember.create.CreateCastMemberCommand;
 import com.codeflix.admin.catalog.application.castmember.create.CreateCastMemberUseCase;
 import com.codeflix.admin.catalog.application.castmember.retrieve.get.GetCastMemberByIdUseCase;
+import com.codeflix.admin.catalog.application.castmember.update.UpdateCastMemberCommand;
+import com.codeflix.admin.catalog.application.castmember.update.UpdateCastMemberUseCase;
 import com.codeflix.admin.catalog.domain.pagination.Pagination;
 import com.codeflix.admin.catalog.infrastructure.api.CastMemberAPI;
 import com.codeflix.admin.catalog.infrastructure.castmember.models.CastMemberResponse;
 import com.codeflix.admin.catalog.infrastructure.castmember.models.CreateCastMemberRequest;
+import com.codeflix.admin.catalog.infrastructure.castmember.models.UpdateCastMemberRequest;
 import com.codeflix.admin.catalog.infrastructure.castmember.presenters.CastMemberPresenter;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.RestController;
@@ -18,13 +21,16 @@ import java.util.Objects;
 public class CastMemberController implements CastMemberAPI {
     private final CreateCastMemberUseCase createCastMemberUseCase;
     private final GetCastMemberByIdUseCase getCastMemberByIdUseCase;
+    private final UpdateCastMemberUseCase updateCastMemberUseCase;
 
     public CastMemberController(
             final CreateCastMemberUseCase createCastMemberUseCase,
-            final GetCastMemberByIdUseCase getCastMemberByIdUseCase
+            final GetCastMemberByIdUseCase getCastMemberByIdUseCase,
+            final UpdateCastMemberUseCase updateCastMemberUseCase
     ) {
         this.createCastMemberUseCase = Objects.requireNonNull(createCastMemberUseCase);
         this.getCastMemberByIdUseCase = Objects.requireNonNull(getCastMemberByIdUseCase);
+        this.updateCastMemberUseCase = Objects.requireNonNull(updateCastMemberUseCase);
     }
 
 
@@ -48,8 +54,12 @@ public class CastMemberController implements CastMemberAPI {
     }
 
     @Override
-    public ResponseEntity<?> updateById(String id, Object input) {
-        return null;
+    public ResponseEntity<?> updateById(final String id, final UpdateCastMemberRequest aBody) {
+        final var aCommand = UpdateCastMemberCommand.with(id, aBody.name(), aBody.castMemberType());
+
+        final var output = this.updateCastMemberUseCase.execute(aCommand);
+
+        return ResponseEntity.ok(output);
     }
 
     @Override
