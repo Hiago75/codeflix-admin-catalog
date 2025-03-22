@@ -6,7 +6,7 @@ import com.codeflix.admin.catalog.domain.pagination.SearchQuery;
 
 import java.util.Objects;
 
-public final class DefaultListCastMembersUseCase extends ListCastMembersUseCase{
+public non-sealed class DefaultListCastMembersUseCase extends ListCastMembersUseCase{
     private CastMemberGateway castMemberGateway;
 
     public DefaultListCastMembersUseCase(final CastMemberGateway castMemberGateway) {

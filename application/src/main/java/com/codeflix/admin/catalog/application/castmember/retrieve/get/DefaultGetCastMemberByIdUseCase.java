@@ -7,7 +7,7 @@ import com.codeflix.admin.catalog.domain.exceptions.NotFoundException;
 
 import java.util.Objects;
 
-public final class DefaultGetCastMemberByIdUseCase extends GetCastMemberByIdUseCase{
+public non-sealed class DefaultGetCastMemberByIdUseCase extends GetCastMemberByIdUseCase{
     private final CastMemberGateway castMemberGateway;
 
     public DefaultGetCastMemberByIdUseCase(final CastMemberGateway castMemberGateway) {

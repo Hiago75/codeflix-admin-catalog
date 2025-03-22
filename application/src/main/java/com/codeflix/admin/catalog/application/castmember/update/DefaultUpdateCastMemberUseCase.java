@@ -1,8 +1,5 @@
 package com.codeflix.admin.catalog.application.castmember.update;
 
-import com.codeflix.admin.catalog.application.castmember.create.CreateCastMemberCommand;
-import com.codeflix.admin.catalog.application.castmember.create.CreateCastMemberOutput;
-import com.codeflix.admin.catalog.application.castmember.create.CreateCastMemberUseCase;
 import com.codeflix.admin.catalog.domain.Identifier;
 import com.codeflix.admin.catalog.domain.castmember.CastMember;
 import com.codeflix.admin.catalog.domain.castmember.CastMemberGateway;
@@ -14,7 +11,7 @@ import com.codeflix.admin.catalog.domain.validation.handler.Notification;
 import java.util.Objects;
 import java.util.function.Supplier;
 
-public final class DefaultUpdateCastMemberUseCase extends UpdateCastMemberUseCase {
+public non-sealed class DefaultUpdateCastMemberUseCase extends UpdateCastMemberUseCase {
     private final CastMemberGateway castMemberGateway;
 
     public DefaultUpdateCastMemberUseCase(final CastMemberGateway castMemberGateway) {
