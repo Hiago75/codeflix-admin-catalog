@@ -236,8 +236,4 @@ public class UpdateGenreUseCaseTest extends UseCaseTest {
 
         verify(categoryGateway, times(1)).existsByIds(expectedCategoriesOnSearch);
     }
-
-    private List<String> asString(final List<CategoryID> ids) {
-        return ids.stream().map(CategoryID::getValue).toList();
-    }
 }

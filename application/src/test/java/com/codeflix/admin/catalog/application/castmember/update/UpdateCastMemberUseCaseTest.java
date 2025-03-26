@@ -94,7 +94,7 @@ public class UpdateCastMemberUseCaseTest extends UseCaseTest {
 
         final var expectedId = CastMemberID.from("123");
         final var expectedName = Fixture.name();
-        final CastMemberType expectedType = Fixture.CastMember.type();
+        final CastMemberType expectedType = Fixture.CastMembers.type();
 
         final var expectedErrorMessage = "CastMember with ID 123 was not found";
 

@@ -32,7 +32,7 @@ public class GetCastMemberByIdUseCaseTest extends UseCaseTest {
     @Test
     public void givenAValidId_whenCallsGetCastMember_shouldReturnIt() {
         final var expectedName = Fixture.name();
-        final var expectedType = Fixture.CastMember.type();
+        final var expectedType = Fixture.CastMembers.type();
 
         final var aMember = CastMember.newMember(expectedName, expectedType);
         final var expectedId = aMember.getId();
