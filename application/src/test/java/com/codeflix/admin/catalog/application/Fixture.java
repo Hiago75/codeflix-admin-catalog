@@ -6,9 +6,8 @@ import com.codeflix.admin.catalog.domain.category.Category;
 import com.codeflix.admin.catalog.domain.genre.Genre;
 import com.codeflix.admin.catalog.domain.video.Rating;
 import com.codeflix.admin.catalog.domain.video.Resource;
+import com.codeflix.admin.catalog.domain.video.VideoMediaType;
 import net.datafaker.Faker;
-
-import java.util.Arrays;
 
 import static io.vavr.API.*;
 
@@ -69,9 +68,9 @@ public final class Fixture {
     }
 
     public static final class Videos {
-        public static Resource resource(final Resource.Type type) {
+        public static Resource resource(final VideoMediaType type) {
             final String contentType = Match(type).of(
-                    Case($(List(Resource.Type.VIDEO, Resource.Type.TRAILER)::contains), "video/mp4"),
+                    Case($(List(VideoMediaType.VIDEO, VideoMediaType.TRAILER)::contains), "video/mp4"),
                     Case($(), "image/jpeg")
             );
 
@@ -80,7 +79,7 @@ public final class Fixture {
         }
 
         public static String description() {
-            return FAKER.lorem().paragraph(255);
+            return FAKER.lorem().characters(1500);
         }
 
         public static Rating rating() {

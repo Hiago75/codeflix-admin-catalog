@@ -8,21 +8,13 @@ public class Resource extends ValueObject {
     private final byte[] content;
     private final String contentType;
     private final String name;
-    private final Type type;
-
-    public enum Type {
-        VIDEO,
-        TRAILER,
-        BANNER,
-        THUMBNAIL,
-        THUMBNAIL_HALF
-    }
+    private final VideoMediaType type;
 
     private Resource(
             final byte[] content,
             final String contentType,
             final String name,
-            final Type type
+            final VideoMediaType type
     ) {
         this.content = Objects.requireNonNull(content);
         this.contentType = Objects.requireNonNull(contentType);
@@ -34,7 +26,7 @@ public class Resource extends ValueObject {
             final byte[] content,
             final String contentType,
             final String name,
-            final Type type
+            final VideoMediaType type
     ) {
         return new Resource(content, contentType, name, type);
     }
@@ -51,7 +43,7 @@ public class Resource extends ValueObject {
         return name;
     }
 
-    public Type type() {
+    public VideoMediaType type() {
         return type;
     }
 }
