@@ -35,6 +35,21 @@ public final class Fixture {
         return FAKER.random().nextDouble(120.0, 190.0);
     }
 
+    public static Video video() {
+        return Video.newVideo(
+                Fixture.title(),
+                Fixture.Videos.description(),
+                Year.of(Fixture.year()),
+                Fixture.duration(),
+                Fixture.Videos.rating(),
+                Fixture.bool(),
+                Fixture.bool(),
+                Set.of(Categories.documentary().getId()),
+                Set.of(Genres.tech().getId()),
+                Set.of(CastMembers.johnDoe().getId(), CastMembers.janeDoe().getId())
+        );
+    }
+
     public static final class CastMembers {
         private static final CastMember JOHN_DOE = CastMember.newMember("John Doe", CastMemberType.DIRECTOR);
         private static final CastMember JANE_DOE = CastMember.newMember("Jane Doe", CastMemberType.ACTOR);
@@ -69,19 +84,21 @@ public final class Fixture {
     }
 
     public static final class Videos {
+        private final static Video SYSTEM_DESIGN = Video.newVideo(
+                "System Design",
+                description(),
+                Year.of(2002),
+                Fixture.duration(),
+                rating(),
+                Fixture.bool(),
+                Fixture.bool(),
+                Set.of(Categories.documentary().getId()),
+                Set.of(Genres.tech().getId()),
+                Set.of(CastMembers.johnDoe().getId(), CastMembers.janeDoe().getId())
+        );
+
         public static Video systemDesign() {
-            return Video.newVideo(
-                    Fixture.title(),
-                    description(),
-                    Year.of(Fixture.year()),
-                    Fixture.duration(),
-                    rating(),
-                    Fixture.bool(),
-                    Fixture.bool(),
-                    Set.of(Categories.documentary().getId()),
-                    Set.of(Genres.tech().getId()),
-                    Set.of(CastMembers.johnDoe().getId(), CastMembers.janeDoe().getId())
-            );
+            return Video.with(SYSTEM_DESIGN);
         }
 
         public static Resource resource(final VideoMediaType type) {
