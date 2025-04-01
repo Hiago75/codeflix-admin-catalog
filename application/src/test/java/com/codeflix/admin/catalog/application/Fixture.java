@@ -7,6 +7,9 @@ import com.codeflix.admin.catalog.domain.genre.Genre;
 import com.codeflix.admin.catalog.domain.video.*;
 import net.datafaker.Faker;
 
+import java.time.Year;
+import java.util.Set;
+
 import static io.vavr.API.*;
 
 public final class Fixture {
@@ -66,6 +69,21 @@ public final class Fixture {
     }
 
     public static final class Videos {
+        public static Video systemDesign() {
+            return Video.newVideo(
+                    Fixture.title(),
+                    description(),
+                    Year.of(Fixture.year()),
+                    Fixture.duration(),
+                    rating(),
+                    Fixture.bool(),
+                    Fixture.bool(),
+                    Set.of(Categories.documentary().getId()),
+                    Set.of(Genres.tech().getId()),
+                    Set.of(CastMembers.johnDoe().getId(), CastMembers.janeDoe().getId())
+            );
+        }
+
         public static Resource resource(final VideoMediaType type) {
             final String contentType = Match(type).of(
                     Case($(List(VideoMediaType.VIDEO, VideoMediaType.TRAILER)::contains), "video/mp4"),
