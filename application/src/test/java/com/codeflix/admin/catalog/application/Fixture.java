@@ -4,9 +4,7 @@ import com.codeflix.admin.catalog.domain.castmember.CastMember;
 import com.codeflix.admin.catalog.domain.castmember.CastMemberType;
 import com.codeflix.admin.catalog.domain.category.Category;
 import com.codeflix.admin.catalog.domain.genre.Genre;
-import com.codeflix.admin.catalog.domain.video.Rating;
-import com.codeflix.admin.catalog.domain.video.Resource;
-import com.codeflix.admin.catalog.domain.video.VideoMediaType;
+import com.codeflix.admin.catalog.domain.video.*;
 import net.datafaker.Faker;
 
 import static io.vavr.API.*;
@@ -85,5 +83,27 @@ public final class Fixture {
         public static Rating rating() {
             return FAKER.options().option(Rating.values());
         }
+    }
+
+    public static String checksum() {
+        return "03fe62de";
+    }
+
+    public static AudioVideoMedia audioVideo(final VideoMediaType type) {
+        final var checksum = Fixture.checksum();
+        return AudioVideoMedia.with(
+                checksum,
+                type.name().toLowerCase(),
+                "/videos/" + checksum
+        );
+    }
+
+    public static ImageMedia image(final VideoMediaType type) {
+        final var checksum = Fixture.checksum();
+        return ImageMedia.with(
+                checksum,
+                type.name().toLowerCase(),
+                "/images/" + checksum
+        );
     }
 }
