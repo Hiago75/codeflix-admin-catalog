@@ -76,11 +76,7 @@ public class VideoJpaEntity {
     @OneToMany(mappedBy = "video", cascade = CascadeType.ALL, orphanRemoval = true)
     private Set<VideoCastMemberJpaEntity> castMembers;
 
-    public VideoJpaEntity() {
-        this.categories = new HashSet<>(3);
-        this.genres = new HashSet<>(3);
-        this.castMembers = new HashSet<>(3);
-    }
+    public VideoJpaEntity() {}
 
     private VideoJpaEntity(
             final UUID id,
