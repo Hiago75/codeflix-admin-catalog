@@ -1,47 +1,44 @@
 package com.codeflix.admin.catalog.infrastructure.video.persistence;
 
-import com.codeflix.admin.catalog.domain.category.Category;
-import com.codeflix.admin.catalog.domain.video.Video;
 import jakarta.persistence.Column;
 import jakarta.persistence.Embeddable;
 
 import java.io.Serializable;
 import java.util.Objects;
-import java.util.UUID;
 
 @Embeddable
 public class VideoCategoryID implements Serializable {
     @Column(name = "video_id", nullable = false)
-    private UUID videoId;
+    private String videoId;
 
     @Column(name="category_id", nullable = false)
-    private UUID categoryId;
+    private String categoryId;
 
     public VideoCategoryID() {
     }
 
-    private VideoCategoryID(final UUID videoId, final UUID categoryId) {
+    private VideoCategoryID(final String videoId, final String categoryId) {
         this.videoId = videoId;
         this.categoryId = categoryId;
     }
 
-    public static VideoCategoryID from(final UUID videoId, final UUID categoryId) {
+    public static VideoCategoryID from(final String videoId, final String categoryId) {
         return new VideoCategoryID(videoId, categoryId);
     }
 
-    public UUID getVideoId() {
+    public String getVideoId() {
         return videoId;
     }
 
-    public void setVideoId(UUID videoId) {
+    public void setVideoId(String videoId) {
         this.videoId = videoId;
     }
 
-    public UUID getCategoryId() {
+    public String getCategoryId() {
         return categoryId;
     }
 
-    public void setCategoryId(UUID categoryId) {
+    public void setCategoryId(String categoryId) {
         this.categoryId = categoryId;
     }
 

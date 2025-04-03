@@ -4,7 +4,6 @@ import com.codeflix.admin.catalog.domain.castmember.CastMemberID;
 import jakarta.persistence.*;
 
 import java.util.Objects;
-import java.util.UUID;
 
 @Table(name= "videos_cast_members")
 @Entity(name="VideoCastMember")
@@ -26,7 +25,7 @@ public class VideoCastMemberJpaEntity {
 
     public static VideoCastMemberJpaEntity from(final VideoJpaEntity video, final CastMemberID genre) {
         return new VideoCastMemberJpaEntity(
-                VideoCastMemberID.from(video.getId(), UUID.fromString(genre.getValue())),
+                VideoCastMemberID.from(video.getId(), genre.getValue()),
                 video
         );
     }

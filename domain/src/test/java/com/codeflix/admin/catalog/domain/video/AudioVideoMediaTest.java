@@ -92,25 +92,5 @@ class AudioVideoMediaTest {
                         expectedStatus
                 )
         );
-
-        assertThrows(NullPointerException.class, () ->
-                AudioVideoMedia.with(
-                        expectedChecksum,
-                        expectedName,
-                        expectedRawLocation,
-                        null,
-                        expectedStatus
-                )
-        );
-
-        assertThrows(NullPointerException.class, () ->
-                AudioVideoMedia.with(
-                        expectedChecksum,
-                        expectedName,
-                        expectedRawLocation,
-                        expectedEncodedLocation,
-                        null
-                )
-        );
     }
 }

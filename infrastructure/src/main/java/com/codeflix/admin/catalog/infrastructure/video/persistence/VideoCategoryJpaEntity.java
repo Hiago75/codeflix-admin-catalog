@@ -4,7 +4,6 @@ import com.codeflix.admin.catalog.domain.category.CategoryID;
 import jakarta.persistence.*;
 
 import java.util.Objects;
-import java.util.UUID;
 
 @Table(name = "videos_categories")
 @Entity(name = "VideoCategory")
@@ -26,7 +25,7 @@ public class VideoCategoryJpaEntity {
 
     public static VideoCategoryJpaEntity from(final VideoJpaEntity video, final CategoryID categoryId) {
         return new VideoCategoryJpaEntity(
-                VideoCategoryID.from(video.getId(), UUID.fromString(categoryId.getValue())),
+                VideoCategoryID.from(video.getId(), categoryId.getValue()),
                 video
         );
     }
