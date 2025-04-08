@@ -69,17 +69,25 @@ public final class Fixture {
 
     public static final class Categories {
         private static final Category DOCUMENTARY = Category.newCategory("Documentary", "Documentaries about real-life events", true);
+        private static final Category MOVIES = Category.newCategory("Movies", "Movies about anything", true);
 
         public static Category documentary() {
             return Category.with(DOCUMENTARY);
+        }
+        public static Category movies() {
+            return Category.with(MOVIES);
         }
     }
 
     public static final class Genres {
         private static final Genre TECH = Genre.newGenre("Technology", true);
+        private static final Genre BUSINESS = Genre.newGenre("Business", true);
 
         public static Genre tech() {
             return Genre.with(TECH);
+        }
+        public static Genre business() {
+            return Genre.with(BUSINESS);
         }
     }
 

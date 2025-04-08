@@ -3,6 +3,7 @@ package com.codeflix.admin.catalog.infrastructure.video.persistence;
 import com.codeflix.admin.catalog.domain.castmember.CastMemberID;
 import com.codeflix.admin.catalog.domain.category.CategoryID;
 import com.codeflix.admin.catalog.domain.genre.GenreID;
+import com.codeflix.admin.catalog.domain.utils.CollectionUtils;
 import com.codeflix.admin.catalog.domain.video.Rating;
 import com.codeflix.admin.catalog.domain.video.Video;
 import com.codeflix.admin.catalog.domain.video.VideoID;
@@ -170,13 +171,13 @@ public class VideoJpaEntity {
                 Optional.ofNullable(getVideo()).map(AudioVideoMediaJpaEntity::toAggregate)
                         .orElse(null),
                 getCategories().stream()
-                        .map(it -> CategoryID.from(it.getId().getCategoryId().toString()))
+                        .map(it -> CategoryID.from(it.getId().getCategoryId()))
                         .collect(Collectors.toSet()),
                 getGenres().stream()
-                        .map(it -> GenreID.from(it.getId().getGenreId().toString()))
+                        .map(it -> GenreID.from(it.getId().getGenreId()))
                         .collect(Collectors.toSet()),
                 getCastMembers().stream()
-                        .map(it -> CastMemberID.from(it.getId().getCastMemberId().toString()))
+                        .map(it -> CastMemberID.from(it.getId().getCastMemberId()))
                         .collect(Collectors.toSet())
         );
     }
@@ -335,5 +336,17 @@ public class VideoJpaEntity {
 
     public void setCastMembers(Set<VideoCastMemberJpaEntity> castMembers) {
         this.castMembers = castMembers;
+    }
+
+    public Set<CategoryID> getCategoriesID() {
+        return CollectionUtils.mapTo(getCategories(), it -> CategoryID.from(it.getId().getCategoryId()));
+    }
+
+    public Set<GenreID> getGenresID() {
+        return CollectionUtils.mapTo(getGenres(), it -> GenreID.from(it.getId().getGenreId()));
+    }
+
+    public Set<CastMemberID> getCastMembersID() {
+        return CollectionUtils.mapTo(getCastMembers(), it -> CastMemberID.from(it.getId().getCastMemberId()));
     }
 }

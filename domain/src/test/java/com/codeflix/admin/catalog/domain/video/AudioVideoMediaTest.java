@@ -7,6 +7,7 @@ import static org.junit.jupiter.api.Assertions.*;
 class AudioVideoMediaTest {
     @Test
     public void givenValidParams_whenCallsNewImage_shouldReturnInstance() {
+        final var expectedId = "id";
         final var expectedChecksum = "abc";
         final var expectedName = "Banner.png";
         final var expectedRawLocation = "/images/abc";
@@ -14,6 +15,7 @@ class AudioVideoMediaTest {
         final var expectedStatus = MediaStatus.PENDING;
 
         final var actualVideo = AudioVideoMedia.with(
+                expectedId,
                 expectedChecksum,
                 expectedName,
                 expectedRawLocation,
@@ -22,6 +24,7 @@ class AudioVideoMediaTest {
         );
 
         assertNotNull(actualVideo);
+        assertEquals(expectedId, actualVideo.id());
         assertEquals(expectedChecksum, actualVideo.checksum());
         assertEquals(expectedName, actualVideo.name());
         assertEquals(expectedRawLocation, actualVideo.rawLocation());
@@ -37,6 +40,7 @@ class AudioVideoMediaTest {
         final var expectedStatus = MediaStatus.PENDING;
 
         final var video1 = AudioVideoMedia.with(
+                "id",
                 expectedChecksum,
                 "Random",
                 expectedRawLocation,
@@ -44,6 +48,7 @@ class AudioVideoMediaTest {
                 expectedStatus
         );
         final var video2 = AudioVideoMedia.with(
+                "id",
                 expectedChecksum,
                 "Simple",
                 expectedRawLocation,
@@ -66,6 +71,7 @@ class AudioVideoMediaTest {
         assertThrows(NullPointerException.class, () ->
                 AudioVideoMedia.with(
                         null,
+                        null,
                         expectedName,
                         expectedRawLocation,
                         expectedEncodedLocation,
@@ -75,6 +81,7 @@ class AudioVideoMediaTest {
 
         assertThrows(NullPointerException.class, () ->
                 AudioVideoMedia.with(
+                        "id",
                         expectedChecksum,
                         null,
                         expectedRawLocation,
@@ -85,6 +92,7 @@ class AudioVideoMediaTest {
 
         assertThrows(NullPointerException.class, () ->
                 AudioVideoMedia.with(
+                        "id",
                         expectedChecksum,
                         expectedName,
                         null,

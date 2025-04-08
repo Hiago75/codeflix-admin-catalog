@@ -8,6 +8,7 @@ import com.codeflix.admin.catalog.infrastructure.video.persistence.VideoJpaEntit
 import com.codeflix.admin.catalog.infrastructure.video.persistence.VideoRepository;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort;
+import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.Objects;
@@ -16,6 +17,7 @@ import java.util.Optional;
 import static com.codeflix.admin.catalog.domain.utils.CollectionUtils.mapTo;
 import static com.codeflix.admin.catalog.domain.utils.CollectionUtils.nullIfEmpty;
 
+@Component
 public class DefaultVideoGateway implements VideoGateway {
     private final VideoRepository videoRepository;
 

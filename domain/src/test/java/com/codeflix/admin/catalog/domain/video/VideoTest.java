@@ -157,7 +157,7 @@ public class VideoTest {
                 expectedMembers
         );
 
-        final var aVideoMedia = AudioVideoMedia.with("avc", "video.mp4", "/123/videos", "", MediaStatus.PENDING);
+        final var aVideoMedia = AudioVideoMedia.with("id", "avc", "video.mp4", "/123/videos", "", MediaStatus.PENDING);
 
         final var actualVideo = Video.with(aVideo).setVideo(aVideoMedia);
 
@@ -212,7 +212,7 @@ public class VideoTest {
                 expectedMembers
         );
 
-        final var aTrailerMedia = AudioVideoMedia.with("avc", "trailer.mp4", "/123/videos", "", MediaStatus.PENDING);
+        final var aTrailerMedia = AudioVideoMedia.with("id", "avc", "trailer.mp4", "/123/videos", "", MediaStatus.PENDING);
 
         final var actualVideo = Video.with(aVideo).setTrailer(aTrailerMedia);
 

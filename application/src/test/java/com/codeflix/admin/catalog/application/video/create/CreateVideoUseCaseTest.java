@@ -886,9 +886,10 @@ public class CreateVideoUseCaseTest extends UseCaseTest {
 
             return AudioVideoMedia.with(
                     IdUtils.uuid(),
+                    IdUtils.uuid(),
                     resource.name(),
                     "/video",
-                    null,
+                    "",
                     MediaStatus.PENDING
             );
         });
