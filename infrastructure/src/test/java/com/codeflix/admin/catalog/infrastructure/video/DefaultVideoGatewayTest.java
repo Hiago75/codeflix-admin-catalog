@@ -330,4 +330,52 @@ public class DefaultVideoGatewayTest {
         assertTrue(persistedVideo.getUpdatedAt().isAfter(aVideo.getUpdatedAt()));
     }
 
+    @Test
+    public void givenAValidVideoId_whenCallsDeleteById_shouldDeleteIt() {
+        final var aVideo = videoGateway.create(Video.newVideo(
+                Fixture.title(),
+                Fixture.Videos.description(),
+                Year.of(Fixture.year()),
+                Fixture.duration(),
+                Fixture.Videos.rating(),
+                Fixture.bool(),
+                Fixture.bool(),
+                Set.of(),
+                Set.of(),
+                Set.of()
+        ));
+
+        assertEquals(1, videoRepository.count());
+
+        final var anId = aVideo.getId();
+
+        videoGateway.deleteById(anId);
+
+        assertEquals(0, videoRepository.count());
+    }
+
+    @Test
+    public void givenAnInvalidVideoId_whenCallsDeleteById_shouldDeleteIt() {
+        videoGateway.create(Video.newVideo(
+                Fixture.title(),
+                Fixture.Videos.description(),
+                Year.of(Fixture.year()),
+                Fixture.duration(),
+                Fixture.Videos.rating(),
+                Fixture.bool(),
+                Fixture.bool(),
+                Set.of(),
+                Set.of(),
+                Set.of()
+        ));
+
+        assertEquals(1, videoRepository.count());
+
+        final var anId = VideoID.unique();
+
+        videoGateway.deleteById(anId);
+
+        assertEquals(1, videoRepository.count());
+    }
+
 }

@@ -120,7 +120,7 @@ public final class Fixture {
         }
 
         public static String description() {
-            return FAKER.lorem().characters(1500);
+            return FAKER.lorem().characters(1000);
         }
 
         public static Rating rating() {
