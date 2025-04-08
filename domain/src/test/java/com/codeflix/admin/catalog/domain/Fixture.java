@@ -7,6 +7,8 @@ import com.codeflix.admin.catalog.domain.genre.Genre;
 import com.codeflix.admin.catalog.domain.video.*;
 import net.datafaker.Faker;
 
+import java.math.BigDecimal;
+import java.math.RoundingMode;
 import java.time.Year;
 import java.util.Set;
 
@@ -32,7 +34,11 @@ public final class Fixture {
     }
 
     public static Double duration() {
-        return FAKER.random().nextDouble(120.0, 190.0);
+        double originalValue = FAKER.random().nextDouble(120.0, 190.0);
+        BigDecimal bd = new BigDecimal(Double.toString(originalValue));
+
+        bd = bd.setScale(2, RoundingMode.HALF_UP);
+        return bd.doubleValue();
     }
 
     public static Video video() {
