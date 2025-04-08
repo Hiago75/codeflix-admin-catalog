@@ -1,7 +1,7 @@
 package com.codeflix.admin.catalog.application.castmember.create;
 
-import com.codeflix.admin.catalog.application.Fixture;
 import com.codeflix.admin.catalog.application.UseCaseTest;
+import com.codeflix.admin.catalog.domain.Fixture;
 import com.codeflix.admin.catalog.domain.castmember.CastMemberGateway;
 import com.codeflix.admin.catalog.domain.castmember.CastMemberType;
 import com.codeflix.admin.catalog.domain.exceptions.NotificationException;

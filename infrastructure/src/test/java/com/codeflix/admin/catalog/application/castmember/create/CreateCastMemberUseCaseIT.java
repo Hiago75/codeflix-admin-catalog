@@ -1,6 +1,6 @@
 package com.codeflix.admin.catalog.application.castmember.create;
 
-import com.codeflix.admin.catalog.Fixture;
+import com.codeflix.admin.catalog.domain.Fixture;
 import com.codeflix.admin.catalog.IntegrationTest;
 import com.codeflix.admin.catalog.domain.castmember.CastMemberGateway;
 import com.codeflix.admin.catalog.domain.castmember.CastMemberType;
@@ -28,7 +28,7 @@ public class CreateCastMemberUseCaseIT {
     @Test
     public void givenAValidCommand_whenCallsCreateCastMember_shouldReturnIt() {
         final var expectedName = Fixture.name();
-        final var expectedType = Fixture.CastMember.type();
+        final var expectedType = Fixture.CastMembers.type();
 
         final var aCommand = CreateCastMemberCommand.with(expectedName, expectedType);
 
@@ -50,7 +50,7 @@ public class CreateCastMemberUseCaseIT {
     @Test
     public void givenAInvalidName_whenCallsCreateCastMember_shouldThrowsNotificationException() {
         final String expectedName = null;
-        final var expectedType = Fixture.CastMember.type();
+        final var expectedType = Fixture.CastMembers.type();
 
         final var expectedErrorCount = 1;
         final var expectedErrorMessage = "'name' should not be null";

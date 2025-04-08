@@ -1,7 +1,7 @@
 package com.codeflix.admin.catalog.application.video.retrieve.get;
 
-import com.codeflix.admin.catalog.application.Fixture;
 import com.codeflix.admin.catalog.application.UseCaseTest;
+import com.codeflix.admin.catalog.domain.Fixture;
 import com.codeflix.admin.catalog.domain.exceptions.NotFoundException;
 import com.codeflix.admin.catalog.domain.video.Video;
 import com.codeflix.admin.catalog.domain.video.VideoGateway;
@@ -16,8 +16,8 @@ import java.util.List;
 import java.util.Optional;
 import java.util.Set;
 
-import static com.codeflix.admin.catalog.application.Fixture.audioVideo;
-import static com.codeflix.admin.catalog.application.Fixture.image;
+import static com.codeflix.admin.catalog.domain.Fixture.audioVideo;
+import static com.codeflix.admin.catalog.domain.Fixture.image;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.ArgumentMatchers.any;

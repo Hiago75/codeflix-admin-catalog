@@ -17,4 +17,12 @@ public class CollectionUtils {
                 .map(mapper)
                 .collect(Collectors.toSet());
     }
+
+    public static <T> Set<T> nullIfEmpty(final Set<T> values) {
+        if(values == null || values.isEmpty()) {
+            return null;
+        }
+
+        return values;
+    }
 }

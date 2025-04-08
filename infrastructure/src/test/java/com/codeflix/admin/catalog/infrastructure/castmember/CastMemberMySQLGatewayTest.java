@@ -1,6 +1,6 @@
 package com.codeflix.admin.catalog.infrastructure.castmember;
 
-import com.codeflix.admin.catalog.Fixture;
+import com.codeflix.admin.catalog.domain.Fixture;
 import com.codeflix.admin.catalog.domain.castmember.CastMember;
 import com.codeflix.admin.catalog.MySQLGatewayTest;
 import com.codeflix.admin.catalog.domain.castmember.CastMemberID;
@@ -29,7 +29,7 @@ public class CastMemberMySQLGatewayTest {
     @Test
     public void givenAValidCastMember_whenCallsCreate_shouldPersistIt() {
         final var expectedName = Fixture.name();
-        final var expectedType = Fixture.CastMember.type();
+        final var expectedType = Fixture.CastMembers.type();
 
         final var aMember = CastMember.newMember(expectedName, expectedType);
         final var expectedId = aMember.getId();
@@ -91,7 +91,7 @@ public class CastMemberMySQLGatewayTest {
     @Test
     public void givenAValidCastMember_whenCallsFindById_shouldReturnIt() {
         final var expectedName = Fixture.name();
-        final var expectedType = Fixture.CastMember.type();
+        final var expectedType = Fixture.CastMembers.type();
 
         final var aMember = CastMember.newMember(expectedName, expectedType);
         final var expectedId = aMember.getId();
@@ -111,7 +111,7 @@ public class CastMemberMySQLGatewayTest {
 
     @Test
     public void givenAnInvalidId_whenCallsFindById_shouldReturnEmpty() {
-        final var aMember = CastMember.newMember(Fixture.name(), Fixture.CastMember.type());
+        final var aMember = CastMember.newMember(Fixture.name(), Fixture.CastMembers.type());
 
         castMemberRepository.saveAndFlush(CastMemberJpaEntity.from(aMember));
 
@@ -124,7 +124,7 @@ public class CastMemberMySQLGatewayTest {
 
     @Test
     public void givenAValidCastMember_whenCallsDeleteById_shouldDeleteIt() {
-        final var aMember = CastMember.newMember(Fixture.name(), Fixture.CastMember.type());
+        final var aMember = CastMember.newMember(Fixture.name(), Fixture.CastMembers.type());
 
         castMemberRepository.saveAndFlush(CastMemberJpaEntity.from(aMember));
 
@@ -137,7 +137,7 @@ public class CastMemberMySQLGatewayTest {
 
     @Test
     public void givenAnInvalidId_whenCallsDeleteById_shouldBeIgnored() {
-        final var aMember = CastMember.newMember(Fixture.name(), Fixture.CastMember.type());
+        final var aMember = CastMember.newMember(Fixture.name(), Fixture.CastMembers.type());
 
         castMemberRepository.saveAndFlush(CastMemberJpaEntity.from(aMember));
 

@@ -1,6 +1,6 @@
 package com.codeflix.admin.catalog.application.castmember.update;
 
-import com.codeflix.admin.catalog.Fixture;
+import com.codeflix.admin.catalog.domain.Fixture;
 import com.codeflix.admin.catalog.IntegrationTest;
 import com.codeflix.admin.catalog.domain.castmember.CastMember;
 import com.codeflix.admin.catalog.domain.castmember.CastMemberGateway;
@@ -90,7 +90,7 @@ public class UpdateCastMemberUseCaseIT {
 
         final var expectedId = CastMemberID.from("123");
         final var expectedName = Fixture.name();
-        final CastMemberType expectedType = Fixture.CastMember.type();
+        final CastMemberType expectedType = Fixture.CastMembers.type();
 
         final var expectedErrorMessage = "CastMember with ID 123 was not found";
 

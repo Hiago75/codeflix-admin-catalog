@@ -1,6 +1,6 @@
 package com.codeflix.admin.catalog.application.castmember.retrieve.get;
 
-import com.codeflix.admin.catalog.Fixture;
+import com.codeflix.admin.catalog.domain.Fixture;
 import com.codeflix.admin.catalog.IntegrationTest;
 import com.codeflix.admin.catalog.domain.castmember.CastMember;
 import com.codeflix.admin.catalog.domain.castmember.CastMemberGateway;
@@ -31,7 +31,7 @@ public class GetCastMemberByIdUseCaseIT {
     @Test
     public void givenAValidId_whenCallsGetCastMember_shouldReturnIt() {
         final var expectedName = Fixture.name();
-        final var expectedType = Fixture.CastMember.type();
+        final var expectedType = Fixture.CastMembers.type();
 
         final var aMember = CastMember.newMember(expectedName, expectedType);
         final var expectedId = aMember.getId();

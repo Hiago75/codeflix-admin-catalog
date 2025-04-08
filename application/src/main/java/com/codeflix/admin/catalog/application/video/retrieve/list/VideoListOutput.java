@@ -4,7 +4,6 @@ import com.codeflix.admin.catalog.domain.video.Video;
 import com.codeflix.admin.catalog.domain.video.VideoPreview;
 
 import java.time.Instant;
-import java.util.Set;
 
 public record VideoListOutput(
         String id,

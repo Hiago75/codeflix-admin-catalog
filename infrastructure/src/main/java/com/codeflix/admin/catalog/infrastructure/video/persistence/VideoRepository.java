@@ -11,18 +11,18 @@ import java.util.Set;
 
 public interface VideoRepository extends JpaRepository<VideoJpaEntity, String> {
     @Query("""
-           SELECT NEW com.codeflix.admin.catalog.domain.video.VideoPreview(
+           SELECT DISTINCT new com.codeflix.admin.catalog.domain.video.VideoPreview(
                 v.id as id,
                 v.title as title,
                 v.description as description,
                 v.createdAt as createdAt,
-                v.updatedAt as updatedAt,
+                v.updatedAt as updatedAt
            )
            FROM Video v
-                JOIN v.castMembers members
-                JOIN v.categories categories
-                JOIN v.genres genres
-           WHERE (
+                LEFT JOIN v.castMembers members
+                LEFT JOIN v.categories categories
+                LEFT JOIN v.genres genres
+           WHERE
                 (:terms IS NULL OR UPPER(v.title) LIKE :terms)
            AND
                 (:castMembers IS NULL OR members.id.castMemberId IN :castMembers)
@@ -30,7 +30,6 @@ public interface VideoRepository extends JpaRepository<VideoJpaEntity, String> {
                 (:categories IS NULL OR categories.id.categoryId IN :categories)
            AND
                 (:genres IS NULL OR genres.id.genreId IN :genres)
-           )
            """)
     Page<VideoPreview> findAll(
             @Param("terms") String terms,

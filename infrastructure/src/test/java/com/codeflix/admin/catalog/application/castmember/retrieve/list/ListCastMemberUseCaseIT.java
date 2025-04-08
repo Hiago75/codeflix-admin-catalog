@@ -1,6 +1,6 @@
 package com.codeflix.admin.catalog.application.castmember.retrieve.list;
 
-import com.codeflix.admin.catalog.Fixture;
+import com.codeflix.admin.catalog.domain.Fixture;
 import com.codeflix.admin.catalog.IntegrationTest;
 import com.codeflix.admin.catalog.domain.castmember.CastMember;
 import com.codeflix.admin.catalog.domain.castmember.CastMemberGateway;
@@ -32,8 +32,8 @@ public class ListCastMemberUseCaseIT {
     @Test
     public void givenAValidQuery_whenCallsListCastMembers_shouldReturnAll() {
         final var members = List.of(
-                CastMember.newMember(Fixture.name(), Fixture.CastMember.type()),
-                CastMember.newMember(Fixture.name(), Fixture.CastMember.type())
+                CastMember.newMember(Fixture.name(), Fixture.CastMembers.type()),
+                CastMember.newMember(Fixture.name(), Fixture.CastMembers.type())
         );
 
         this.castMemberRepository.saveAllAndFlush(members.stream().map(CastMemberJpaEntity::from).toList());

@@ -1,6 +1,6 @@
 package com.codeflix.admin.catalog.infrastructure.castmember.models;
 
-import com.codeflix.admin.catalog.Fixture;
+import com.codeflix.admin.catalog.domain.Fixture;
 import com.codeflix.admin.catalog.JacksonTest;
 import com.codeflix.admin.catalog.domain.utils.InstantUtils;
 import org.junit.jupiter.api.Test;
@@ -21,7 +21,7 @@ public class CastMemberListResponseTest {
     public void testMarshall() throws IOException {
         final var expectedId = "123";
         final var expectedName = Fixture.name();
-        final var expectedType = Fixture.CastMember.type();
+        final var expectedType = Fixture.CastMembers.type();
         final var expectedCreatedAt = InstantUtils.now();
 
         final var response = new CastMemberListResponse(

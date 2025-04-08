@@ -1,4 +1,4 @@
-package com.codeflix.admin.catalog.application;
+package com.codeflix.admin.catalog.domain;
 
 import com.codeflix.admin.catalog.domain.castmember.CastMember;
 import com.codeflix.admin.catalog.domain.castmember.CastMemberType;

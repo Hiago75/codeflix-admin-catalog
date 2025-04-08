@@ -1,6 +1,6 @@
 package com.codeflix.admin.catalog.application.castmember.delete;
 
-import com.codeflix.admin.catalog.Fixture;
+import com.codeflix.admin.catalog.domain.Fixture;
 import com.codeflix.admin.catalog.IntegrationTest;
 import com.codeflix.admin.catalog.domain.castmember.CastMember;
 import com.codeflix.admin.catalog.domain.castmember.CastMemberGateway;
@@ -30,8 +30,8 @@ public class DeleteCastMemberUseCaseIT {
 
     @Test
     public void givenAValid_whenCallsDeleteCastMember_shouldDeleteIt() {
-        final var aMember = CastMember.newMember(Fixture.name(), Fixture.CastMember.type());
-        final var aMember2 = CastMember.newMember(Fixture.name(), Fixture.CastMember.type());
+        final var aMember = CastMember.newMember(Fixture.name(), Fixture.CastMembers.type());
+        final var aMember2 = CastMember.newMember(Fixture.name(), Fixture.CastMembers.type());
         final var expectedId = aMember.getId();
 
         this.castMemberRepository.saveAndFlush(CastMemberJpaEntity.from(aMember));
@@ -49,7 +49,7 @@ public class DeleteCastMemberUseCaseIT {
 
     @Test
     public void givenAnInvalid_whenCallsDeleteCastMember_shouldReturnOk() {
-        final var aMember = CastMember.newMember(Fixture.name(), Fixture.CastMember.type());
+        final var aMember = CastMember.newMember(Fixture.name(), Fixture.CastMembers.type());
         this.castMemberRepository.saveAndFlush(CastMemberJpaEntity.from(aMember));
 
         assertEquals(1, this.castMemberRepository.count());
@@ -65,7 +65,7 @@ public class DeleteCastMemberUseCaseIT {
 
     @Test
     public void givenAValid_whenCallsDeleteCastMemberAndGatewayThrowsException_shouldReceiveException() {
-        final var aMember = CastMember.newMember(Fixture.name(), Fixture.CastMember.type());
+        final var aMember = CastMember.newMember(Fixture.name(), Fixture.CastMembers.type());
         final var expectedId = aMember.getId();
 
         this.castMemberRepository.saveAndFlush(CastMemberJpaEntity.from(aMember));

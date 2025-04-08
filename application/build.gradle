@@ -10,10 +10,10 @@ repositories {
 }
 
 dependencies {
+    implementation 'io.vavr:vavr:0.10.5'
     implementation(project(":domain"))
 
-    implementation 'io.vavr:vavr:0.10.5'
-    testImplementation("net.datafaker:datafaker:2.4.2")
+    testImplementation(project(path: ':domain', configuration: 'testClasses'))
 
     testImplementation platform('org.junit:junit-bom:5.10.0')
     testImplementation 'org.mockito:mockito-junit-jupiter:5.15.2'

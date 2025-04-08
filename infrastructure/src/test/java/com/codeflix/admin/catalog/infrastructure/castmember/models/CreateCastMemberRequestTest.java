@@ -1,6 +1,6 @@
 package com.codeflix.admin.catalog.infrastructure.castmember.models;
 
-import com.codeflix.admin.catalog.Fixture;
+import com.codeflix.admin.catalog.domain.Fixture;
 import com.codeflix.admin.catalog.JacksonTest;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -19,7 +19,7 @@ public class CreateCastMemberRequestTest {
     @Test
     public void testUnmarshall() throws IOException {
         final var expectedName = Fixture.name();
-        final var expectedType = Fixture.CastMember.type();
+        final var expectedType = Fixture.CastMembers.type();
 
         final var json = """
         {

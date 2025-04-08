@@ -1,8 +1,8 @@
 package com.codeflix.admin.catalog.application.video.retrieve.list;
 
-import com.codeflix.admin.catalog.application.Fixture;
 import com.codeflix.admin.catalog.application.UseCaseTest;
 import com.codeflix.admin.catalog.application.genre.retrieve.list.GenreListOutput;
+import com.codeflix.admin.catalog.domain.Fixture;
 import com.codeflix.admin.catalog.domain.pagination.Pagination;
 import com.codeflix.admin.catalog.domain.video.VideoGateway;
 import com.codeflix.admin.catalog.domain.video.VideoPreview;

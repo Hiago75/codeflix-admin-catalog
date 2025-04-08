@@ -1,7 +1,7 @@
 package com.codeflix.admin.catalog.application.castmember.update;
 
-import com.codeflix.admin.catalog.application.Fixture;
 import com.codeflix.admin.catalog.application.UseCaseTest;
+import com.codeflix.admin.catalog.domain.Fixture;
 import com.codeflix.admin.catalog.domain.castmember.CastMember;
 import com.codeflix.admin.catalog.domain.castmember.CastMemberGateway;
 import com.codeflix.admin.catalog.domain.castmember.CastMemberID;
