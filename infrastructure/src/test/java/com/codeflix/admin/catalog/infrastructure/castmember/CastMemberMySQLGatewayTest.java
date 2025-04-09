@@ -8,7 +8,6 @@ import com.codeflix.admin.catalog.domain.castmember.CastMemberType;
 import com.codeflix.admin.catalog.domain.pagination.SearchQuery;
 import com.codeflix.admin.catalog.infrastructure.castmember.persistence.CastMemberJpaEntity;
 import com.codeflix.admin.catalog.infrastructure.castmember.persistence.CastMemberRepository;
-import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.CsvSource;
@@ -123,6 +122,23 @@ public class CastMemberMySQLGatewayTest {
     }
 
     @Test
+    public void givenTwoCastMembersAndOnePersisted_whenCallsExistsByIds_shouldReturnPersistedID() {
+        final var aMember = CastMember.newMember("Vin", CastMemberType.DIRECTOR);
+
+        final var expectedItems = 1;
+        final var expectedId = aMember.getId();
+
+        assertEquals(0, castMemberRepository.count());
+
+        castMemberRepository.saveAndFlush(CastMemberJpaEntity.from(aMember));
+
+        final var actualMember = castMemberMySQLGateway.existsByIds(List.of(CastMemberID.from("123"), expectedId));
+
+        assertEquals(expectedItems, actualMember.size());
+        assertEquals(expectedId.getValue(), actualMember.get(0).getValue());
+    }
+
+    @Test
     public void givenAValidCastMember_whenCallsDeleteById_shouldDeleteIt() {
         final var aMember = CastMember.newMember(Fixture.name(), Fixture.CastMembers.type());
 
@@ -162,10 +178,10 @@ public class CastMemberMySQLGatewayTest {
 
         final var actualPage = castMemberMySQLGateway.findAll(aQuery);
 
-        Assertions.assertEquals(expectedPage, actualPage.currentPage());
-        Assertions.assertEquals(expectedPerPage, actualPage.perPage());
-        Assertions.assertEquals(expectedTotal, actualPage.total());
-        Assertions.assertEquals(expectedTotal, actualPage.items().size());
+        assertEquals(expectedPage, actualPage.currentPage());
+        assertEquals(expectedPerPage, actualPage.perPage());
+        assertEquals(expectedTotal, actualPage.total());
+        assertEquals(expectedTotal, actualPage.items().size());
     }
 
     @ParameterizedTest
@@ -194,11 +210,11 @@ public class CastMemberMySQLGatewayTest {
 
         final var actualPage = castMemberMySQLGateway.findAll(aQuery);
 
-        Assertions.assertEquals(expectedPage, actualPage.currentPage());
-        Assertions.assertEquals(expectedPerPage, actualPage.perPage());
-        Assertions.assertEquals(expectedTotal, actualPage.total());
-        Assertions.assertEquals(expectedItemsCount, actualPage.items().size());
-        Assertions.assertEquals(expectedName, actualPage.items().get(0).getName());
+        assertEquals(expectedPage, actualPage.currentPage());
+        assertEquals(expectedPerPage, actualPage.perPage());
+        assertEquals(expectedTotal, actualPage.total());
+        assertEquals(expectedItemsCount, actualPage.items().size());
+        assertEquals(expectedName, actualPage.items().get(0).getName());
     }
 
     @ParameterizedTest
@@ -226,11 +242,11 @@ public class CastMemberMySQLGatewayTest {
 
         final var actualPage = castMemberMySQLGateway.findAll(aQuery);
 
-        Assertions.assertEquals(expectedPage, actualPage.currentPage());
-        Assertions.assertEquals(expectedPerPage, actualPage.perPage());
-        Assertions.assertEquals(expectedTotal, actualPage.total());
-        Assertions.assertEquals(expectedItemsCount, actualPage.items().size());
-        Assertions.assertEquals(expectedName, actualPage.items().get(0).getName());
+        assertEquals(expectedPage, actualPage.currentPage());
+        assertEquals(expectedPerPage, actualPage.perPage());
+        assertEquals(expectedTotal, actualPage.total());
+        assertEquals(expectedItemsCount, actualPage.items().size());
+        assertEquals(expectedName, actualPage.items().get(0).getName());
     }
 
     @ParameterizedTest
