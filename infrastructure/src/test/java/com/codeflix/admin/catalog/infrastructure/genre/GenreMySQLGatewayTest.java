@@ -328,6 +328,24 @@ public class GenreMySQLGatewayTest {
     }
 
     @Test
+    public void givenTwoGenresAndOnePersisted_whenCallsExistsByIds_shouldReturnPersistedID() {
+        final var aGenre = Genre.newGenre("Genre 1", true);
+
+        final var expectedItems = 1;
+        final var expectedId = aGenre.getId();
+
+        assertEquals(0, genreRepository.count());
+
+        genreRepository.saveAndFlush(GenreJpaEntity.from(aGenre));
+
+        final var actualGenre = genreGateway.existsByIds(List.of(GenreID.from("123"), expectedId));
+
+        assertEquals(expectedItems, actualGenre.size());
+        assertEquals(expectedId.getValue(), actualGenre.get(0).getValue());
+    }
+
+
+    @Test
     public void givenEmptyGenres_whenCallFindAll_shouldReturnEmptyList() {
         final var expectedPage = 0;
         final var expectedPerPage = 1;
