@@ -171,7 +171,6 @@ public class CastMemberAPITest {
 
     @Test
     public void givenAValidCommand_whenCallsUpdateCastMember_shouldReturnItsIdentifier() throws Exception {
-        // given
         final var expectedName = Fixture.name();
         final var expectedType = Fixture.CastMembers.type();
 
@@ -184,7 +183,6 @@ public class CastMemberAPITest {
         when(updateCastMemberUseCase.execute(any()))
                 .thenReturn(UpdateCastMemberOutput.from(expectedId));
 
-        // when
         final var aRequest = put("/cast_members/{id}", expectedId.getValue())
                 .contentType(MediaType.APPLICATION_JSON.getMediaType())
                 .content(mapper.writeValueAsString(aCommand));
@@ -192,7 +190,6 @@ public class CastMemberAPITest {
         final var response = this.mvc.perform(aRequest)
                 .andDo(print());
 
-        // then
         response.andExpect(status().isOk())
                 .andExpect(header().string("Content-Type", MediaType.APPLICATION_JSON.getMediaType()))
                 .andExpect(jsonPath("$.id", equalTo(expectedId.getValue())));

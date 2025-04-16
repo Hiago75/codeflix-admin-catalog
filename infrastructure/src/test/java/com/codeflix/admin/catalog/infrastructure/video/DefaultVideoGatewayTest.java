@@ -598,7 +598,6 @@ public class DefaultVideoGatewayTest {
 
     @Test
     public void givenAValidGenre_whenCallFindAll_shouldReturnFilteredList() {
-        // given
         mockVideos();
 
         final var expectedPage = 0;
