@@ -11,6 +11,7 @@ import com.codeflix.admin.catalog.domain.exceptions.InternalErrorException;
 import com.codeflix.admin.catalog.domain.exceptions.NotificationException;
 import com.codeflix.admin.catalog.domain.genre.GenreGateway;
 import com.codeflix.admin.catalog.domain.genre.GenreID;
+import com.codeflix.admin.catalog.domain.resource.Resource;
 import com.codeflix.admin.catalog.domain.utils.IdUtils;
 import com.codeflix.admin.catalog.domain.video.*;
 import org.junit.jupiter.api.Test;
@@ -1065,26 +1066,19 @@ public class UpdateVideoUseCaseTest extends UseCaseTest {
         verify(mediaResourceGateway, times(0)).clearResources(any());
     }
 
-    private void mockImageMedia() {
-        when(mediaResourceGateway.storeImage(any(), any())).thenAnswer(t -> {
-            final var resource = t.getArgument(1, Resource.class);
+    private void mockAudioVideoMedia() {
+        when(mediaResourceGateway.storeAudioVideo(any(), any())).thenAnswer(t -> {
+            final var resource = t.getArgument(1, VideoResource.class);
 
-            return ImageMedia.with(IdUtils.uuid(), resource.name(), "/img");
+            return Fixture.Videos.audioVideo(resource.type());
         });
     }
 
-    private void mockAudioVideoMedia() {
-        when(mediaResourceGateway.storeAudioVideo(any(), any())).thenAnswer(t -> {
-            final var resource = t.getArgument(1, Resource.class);
+    private void mockImageMedia() {
+        when(mediaResourceGateway.storeImage(any(), any())).thenAnswer(t -> {
+            final var resource = t.getArgument(1, VideoResource.class);
 
-            return AudioVideoMedia.with(
-                    IdUtils.uuid(),
-                    IdUtils.uuid(),
-                    resource.name(),
-                    "/video",
-                    "",
-                    MediaStatus.PENDING
-            );
+            return Fixture.Videos.image(resource.type());
         });
     }
 }

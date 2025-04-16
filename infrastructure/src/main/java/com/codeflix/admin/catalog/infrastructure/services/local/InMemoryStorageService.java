@@ -1,6 +1,6 @@
 package com.codeflix.admin.catalog.infrastructure.services.local;
 
-import com.codeflix.admin.catalog.domain.video.Resource;
+import com.codeflix.admin.catalog.domain.resource.Resource;
 import com.codeflix.admin.catalog.infrastructure.services.StorageService;
 
 import java.util.*;
@@ -28,7 +28,7 @@ public class InMemoryStorageService implements StorageService {
 
     @Override
     public Optional<Resource> get(String name) {
-        return this.storage.get(name);
+        return Optional.ofNullable(this.storage.get(name));
     }
 
     @Override

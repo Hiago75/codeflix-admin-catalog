@@ -1,6 +1,6 @@
 package com.codeflix.admin.catalog.infrastructure.services.impl;
 
-import com.codeflix.admin.catalog.domain.video.Resource;
+import com.codeflix.admin.catalog.domain.resource.Resource;
 import com.codeflix.admin.catalog.infrastructure.services.StorageService;
 import com.google.cloud.storage.BlobId;
 import com.google.cloud.storage.BlobInfo;
@@ -33,10 +33,10 @@ public class GCStorageService implements StorageService {
     public Optional<Resource> get(String name) {
         return Optional.ofNullable(this.storage.get(this.bucket, name))
                 .map(blob -> Resource.of(
+                        blob.getCrc32cToHexString(),
                         blob.getContent(),
                         blob.getContentType(),
-                        blob.getName(),
-                        null
+                        blob.getName()
                 ));
     }
 

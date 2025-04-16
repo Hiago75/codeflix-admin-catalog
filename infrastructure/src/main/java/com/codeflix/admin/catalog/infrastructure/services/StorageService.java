@@ -1,6 +1,6 @@
 package com.codeflix.admin.catalog.infrastructure.services;
 
-import com.codeflix.admin.catalog.domain.video.Resource;
+import com.codeflix.admin.catalog.domain.resource.Resource;
 
 import java.util.Collection;
 import java.util.List;

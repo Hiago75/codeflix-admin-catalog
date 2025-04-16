@@ -1,6 +1,6 @@
 package com.codeflix.admin.catalog.application.video.update;
 
-import com.codeflix.admin.catalog.domain.video.Resource;
+import com.codeflix.admin.catalog.domain.resource.Resource;
 
 import java.util.Optional;
 import java.util.Set;

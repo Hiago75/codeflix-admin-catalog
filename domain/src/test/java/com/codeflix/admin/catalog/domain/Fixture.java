@@ -4,6 +4,8 @@ import com.codeflix.admin.catalog.domain.castmember.CastMember;
 import com.codeflix.admin.catalog.domain.castmember.CastMemberType;
 import com.codeflix.admin.catalog.domain.category.Category;
 import com.codeflix.admin.catalog.domain.genre.Genre;
+import com.codeflix.admin.catalog.domain.resource.Resource;
+import com.codeflix.admin.catalog.domain.utils.IdUtils;
 import com.codeflix.admin.catalog.domain.video.*;
 import net.datafaker.Faker;
 
@@ -39,6 +41,10 @@ public final class Fixture {
 
         bd = bd.setScale(2, RoundingMode.HALF_UP);
         return bd.doubleValue();
+    }
+
+    public static String checksum() {
+        return "03fe62de";
     }
 
     public static Video video() {
@@ -98,10 +104,11 @@ public final class Fixture {
     }
 
     public static final class Videos {
-        private final static Video SYSTEM_DESIGN = Video.newVideo(
-                "System Design",
+
+        private static final Video SYSTEM_DESIGN = Video.newVideo(
+                "System Design no Mercado Livre na prática",
                 description(),
-                Year.of(2002),
+                Year.of(2022),
                 Fixture.duration(),
                 rating(),
                 Fixture.bool(),
@@ -115,44 +122,53 @@ public final class Fixture {
             return Video.with(SYSTEM_DESIGN);
         }
 
-        public static Resource resource(final VideoMediaType type) {
-            final String contentType = Match(type).of(
-                    Case($(List(VideoMediaType.VIDEO, VideoMediaType.TRAILER)::contains), "video/mp4"),
-                    Case($(), "image/jpeg")
-            );
-
-            final byte[] content = "Content".getBytes();
-            return Resource.of(content, contentType, type.name().toLowerCase(), type);
-        }
-
-        public static String description() {
-            return FAKER.lorem().characters(1000);
-        }
-
         public static Rating rating() {
             return FAKER.options().option(Rating.values());
         }
-    }
 
-    public static String checksum() {
-        return "03fe62de";
-    }
+        public static VideoMediaType mediaType() {
+            return FAKER.options().option(VideoMediaType.values());
+        }
 
-    public static AudioVideoMedia audioVideo(final VideoMediaType type) {
-        final var checksum = Fixture.checksum();
-        return AudioVideoMedia.with(
-                checksum,
-                type.name().toLowerCase(),
-                "/videos/" + checksum
-        );
-    }
+        public static Resource resource(final VideoMediaType type) {
+            final String contentType = Match(type).of(
+                    Case($(List(VideoMediaType.VIDEO, VideoMediaType.TRAILER)::contains), "video/mp4"),
+                    Case($(), "image/jpg")
+            );
 
-    public static ImageMedia image(final VideoMediaType type) {
-        final var checksum = Fixture.checksum();
-        return ImageMedia.with(
-                checksum,
-                type.name().toLowerCase(),
-                "/images/" + checksum
-        );
+            final String checksum = IdUtils.uuid();
+            final byte[] content = "Conteudo".getBytes();
+
+            return Resource.of(checksum, content, contentType, type.name().toLowerCase());
+        }
+
+        public static String description() {
+            return FAKER.options().option(
+                    """
+                            Descrição bem legal do vídeo, com informações relevantes sobre o conteúdo abordado.
+                            """,
+                    """
+                            Outra descrição legal do vídeo, com informações relevantes sobre o conteúdo abordado.
+                            """
+            );
+        }
+
+        public static AudioVideoMedia audioVideo(final VideoMediaType type) {
+            final var checksum = Fixture.checksum();
+            return AudioVideoMedia.with(
+                    checksum,
+                    type.name().toLowerCase(),
+                    "/videos/" + checksum
+            );
+        }
+
+        public static ImageMedia image(final VideoMediaType type) {
+            final var checksum = Fixture.checksum();
+            return ImageMedia.with(
+                    checksum,
+                    type.name().toLowerCase(),
+                    "/images/" + checksum
+            );
+        }
     }
 }
