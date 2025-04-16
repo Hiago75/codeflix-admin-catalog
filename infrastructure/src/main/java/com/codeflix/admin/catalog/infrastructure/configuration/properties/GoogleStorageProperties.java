@@ -13,7 +13,7 @@ public class GoogleStorageProperties implements InitializingBean {
     private int retryDelay;
     private int retryMaxDelay;
     private int retryMaxAttempts;
-    private double retryMultiplier;
+    private double retryDelayMultiplier;
 
     public String getBucket() {
         return bucket;
@@ -63,12 +63,12 @@ public class GoogleStorageProperties implements InitializingBean {
         this.retryMaxAttempts = retryMaxAttempts;
     }
 
-    public double getRetryMultiplier() {
-        return retryMultiplier;
+    public double getRetryDelayMultiplier() {
+        return retryDelayMultiplier;
     }
 
-    public void setRetryMultiplier(double retryMultiplier) {
-        this.retryMultiplier = retryMultiplier;
+    public void setRetryDelayMultiplier(double retryDelayMultiplier) {
+        this.retryDelayMultiplier = retryDelayMultiplier;
     }
 
     @Override
@@ -85,7 +85,7 @@ public class GoogleStorageProperties implements InitializingBean {
                 ", retryDelay=" + retryDelay +
                 ", retryMaxDelay=" + retryMaxDelay +
                 ", retryMaxAttempts=" + retryMaxAttempts +
-                ", retryMultiplier=" + retryMultiplier +
+                ", retryMultiplier=" + retryDelayMultiplier +
                 '}';
     }
 }
