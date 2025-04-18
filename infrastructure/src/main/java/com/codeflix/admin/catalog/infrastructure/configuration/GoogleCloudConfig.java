@@ -1,7 +1,7 @@
 package com.codeflix.admin.catalog.infrastructure.configuration;
 
-import com.codeflix.admin.catalog.infrastructure.configuration.properties.GoogleCloudProperties;
-import com.codeflix.admin.catalog.infrastructure.configuration.properties.GoogleStorageProperties;
+import com.codeflix.admin.catalog.infrastructure.configuration.properties.google.GoogleCloudProperties;
+import com.codeflix.admin.catalog.infrastructure.configuration.properties.google.GoogleStorageProperties;
 import com.google.api.gax.retrying.RetrySettings;
 import com.google.cloud.http.HttpTransportOptions;
 import com.google.cloud.storage.Storage;
