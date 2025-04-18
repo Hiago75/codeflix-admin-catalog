@@ -2,6 +2,7 @@ package com.codeflix.admin.catalog.domain.resource;
 
 import com.codeflix.admin.catalog.domain.ValueObject;
 
+import java.util.Arrays;
 import java.util.Objects;
 
 public class Resource extends ValueObject {
@@ -45,5 +46,17 @@ public class Resource extends ValueObject {
 
     public String name() {
         return name;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (o == null || getClass() != o.getClass()) return false;
+        Resource resource = (Resource) o;
+        return Objects.equals(checksum, resource.checksum) && Objects.deepEquals(content, resource.content) && Objects.equals(contentType, resource.contentType) && Objects.equals(name, resource.name);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(checksum, Arrays.hashCode(content), contentType, name);
     }
 }

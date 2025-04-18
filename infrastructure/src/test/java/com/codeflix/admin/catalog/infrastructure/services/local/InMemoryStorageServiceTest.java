@@ -13,7 +13,7 @@ import java.util.Set;
 import static org.junit.jupiter.api.Assertions.*;
 
 class InMemoryStorageServiceTest {
-    private InMemoryStorageService target = new InMemoryStorageService();
+    private final InMemoryStorageService target = new InMemoryStorageService();
 
     @BeforeEach
     public void setUp() {
