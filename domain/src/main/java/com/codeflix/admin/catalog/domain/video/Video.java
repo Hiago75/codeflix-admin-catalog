@@ -3,16 +3,14 @@ package com.codeflix.admin.catalog.domain.video;
 import com.codeflix.admin.catalog.domain.AggregateRoot;
 import com.codeflix.admin.catalog.domain.castmember.CastMemberID;
 import com.codeflix.admin.catalog.domain.category.CategoryID;
+import com.codeflix.admin.catalog.domain.event.DomainEvent;
 import com.codeflix.admin.catalog.domain.genre.GenreID;
 import com.codeflix.admin.catalog.domain.utils.InstantUtils;
 import com.codeflix.admin.catalog.domain.validation.ValidationHandler;
 
 import java.time.Instant;
 import java.time.Year;
-import java.util.Collections;
-import java.util.HashSet;
-import java.util.Optional;
-import java.util.Set;
+import java.util.*;
 
 public class Video extends AggregateRoot<VideoID> {
     private String title;
@@ -57,9 +55,10 @@ public class Video extends AggregateRoot<VideoID> {
             final AudioVideoMedia aVideo,
             final Set<CategoryID> aCategories,
             final Set<GenreID> aGenres,
-            final Set<CastMemberID> aCastMembers
+            final Set<CastMemberID> aCastMembers,
+            final List<DomainEvent> domainEvents
     ) {
-        super(anId);
+        super(anId, domainEvents);
         this.title = aTitle;
         this.description = aDescription;
         this.launchedAt = aLaunchedAt;
@@ -116,7 +115,8 @@ public class Video extends AggregateRoot<VideoID> {
                 null,
                 aCategories,
                 aGenres,
-                aCastMembers
+                aCastMembers,
+                null
         );
     }
 
@@ -139,7 +139,8 @@ public class Video extends AggregateRoot<VideoID> {
                 aVideo.getVideo().orElse(null),
                 new HashSet<>(aVideo.getCategories()),
                 new HashSet<>(aVideo.getGenres()),
-                new HashSet<>(aVideo.getCastMembers())
+                new HashSet<>(aVideo.getCastMembers()),
+                aVideo.getDomainEvents()
         );
     }
 
@@ -181,7 +182,8 @@ public class Video extends AggregateRoot<VideoID> {
                 aVideo,
                 aCategories,
                 aGenres,
-                aCastMembers
+                aCastMembers,
+                null
         );
     }
 
