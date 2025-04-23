@@ -23,7 +23,7 @@ google:
         retry-delay: 50
         retry-max-attempts: 2
         retry-max-delay: 50
-        retry-multiplier: 1.0
+        retry-delay-multiplier: 1.0
 
 
 logging:
@@ -66,6 +66,7 @@ spring:
         "[hibernate.generate_statistics]": false # Troubleshooting
         "[hibernate.connection.provider_disables_autocommit]": true
   rabbitmq:
+    dynamic: ${amqp.admin.auto-create}
     host: ${amqp.host}
     port: ${amqp.port}
     username: ${amqp.username}

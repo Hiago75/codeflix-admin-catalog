@@ -1,6 +1,7 @@
 package com.codeflix.admin.catalog.infrastructure;
 
 import com.codeflix.admin.catalog.infrastructure.configuration.WebServerConfig;
+import org.springframework.amqp.rabbit.annotation.RabbitListener;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.core.env.AbstractEnvironment;
