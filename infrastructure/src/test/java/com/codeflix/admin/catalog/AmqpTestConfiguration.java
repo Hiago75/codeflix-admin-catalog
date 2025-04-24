@@ -34,7 +34,7 @@ public class AmqpTestConfiguration {
 
     @Bean
     SimpleRabbitListenerContainerFactory rabbitListenerContainerFactory(final ConnectionFactory connectionFactory) {
-        final var factory = Mockito.mock(SimpleRabbitListenerContainerFactory.class);
+        final var factory = new SimpleRabbitListenerContainerFactory();
         factory.setConnectionFactory(connectionFactory());
 
         return factory;
