@@ -11,7 +11,6 @@ import com.codeflix.admin.catalog.domain.exceptions.NotFoundException;
 import com.codeflix.admin.catalog.domain.exceptions.NotificationException;
 import com.codeflix.admin.catalog.domain.genre.GenreGateway;
 import com.codeflix.admin.catalog.domain.genre.GenreID;
-import com.codeflix.admin.catalog.domain.validation.Error;
 import com.codeflix.admin.catalog.domain.validation.ValidationHandler;
 import com.codeflix.admin.catalog.domain.validation.handler.Notification;
 import com.codeflix.admin.catalog.domain.video.*;
@@ -117,11 +116,11 @@ public class DefaultUpdateVideoUseCase extends UpdateVideoUseCase {
 
             return this.videoGateway.update(
                     aVideo
-                            .setVideo(aVideoMedia)
-                            .setTrailer(aTrailerMedia)
-                            .setBanner(aBanner)
-                            .setThumbnail(aThumbnail)
-                            .setThumbnailHalf(aThumbnailHalf)
+                            .updateVideoMedia(aVideoMedia)
+                            .updateTrailerMedia(aTrailerMedia)
+                            .updateBannerMedia(aBanner)
+                            .updateThumbnailMedia(aThumbnail)
+                            .updateThumbnailHalfMedia(aThumbnailHalf)
             );
         } catch (final Throwable T) {
             throw InternalErrorException.with(
