@@ -1,6 +1,7 @@
 package com.codeflix.admin.catalog;
 
 import com.rabbitmq.client.Channel;
+import org.junit.jupiter.api.Tag;
 import org.mockito.BDDMockito;
 import org.mockito.Mockito;
 import org.springframework.amqp.rabbit.config.SimpleRabbitListenerContainerFactory;
@@ -13,6 +14,7 @@ import org.springframework.context.annotation.Configuration;
 
 @Configuration
 @RabbitListenerTest(spy = false, capture = true)
+@Tag("integrationTest")
 public class AmqpTestConfiguration {
     @Bean
     TestRabbitTemplate rabbitTemplate(final ConnectionFactory connectionFactory) {

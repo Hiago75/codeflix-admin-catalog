@@ -1,11 +1,12 @@
 package com.codeflix.admin.catalog.domain.castmember;
 
+import com.codeflix.admin.catalog.domain.UnitTest;
 import com.codeflix.admin.catalog.domain.exceptions.NotificationException;
 import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.*;
 
-public class CastMemberTest {
+public class CastMemberTest extends UnitTest {
     @Test
     public void givenAValidParams_whenCallNewMember_thenInstantiateACastMember() {
         final var expectedName = "Actor";

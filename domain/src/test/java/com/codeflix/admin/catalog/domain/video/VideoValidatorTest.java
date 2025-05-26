@@ -1,5 +1,6 @@
 package com.codeflix.admin.catalog.domain.video;
 
+import com.codeflix.admin.catalog.domain.UnitTest;
 import com.codeflix.admin.catalog.domain.castmember.CastMemberID;
 import com.codeflix.admin.catalog.domain.category.CategoryID;
 import com.codeflix.admin.catalog.domain.exceptions.DomainException;
@@ -12,7 +13,7 @@ import java.util.Set;
 
 import static org.junit.jupiter.api.Assertions.*;
 
-public class VideoValidatorTest {
+public class VideoValidatorTest extends UnitTest {
     @Test
     public void givenNullTitle_whenCallsValidate_shouldReceiveError() {
         final String expectedTitle = null;

@@ -1,5 +1,6 @@
 package com.codeflix.admin.catalog.domain.genre;
 
+import com.codeflix.admin.catalog.domain.UnitTest;
 import com.codeflix.admin.catalog.domain.category.CategoryID;
 import com.codeflix.admin.catalog.domain.exceptions.NotificationException;
 import org.junit.jupiter.api.Test;
@@ -9,7 +10,7 @@ import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.*;
 
-public class GenreTest {
+public class GenreTest extends UnitTest {
 
     @Test
     public void givenValidParams_whenCallNewGenre_shouldInstantiateAGenre() {

@@ -1,5 +1,6 @@
 package com.codeflix.admin.catalog.domain.video;
 
+import com.codeflix.admin.catalog.domain.UnitTest;
 import com.codeflix.admin.catalog.domain.castmember.CastMemberID;
 import com.codeflix.admin.catalog.domain.category.CategoryID;
 import com.codeflix.admin.catalog.domain.genre.GenreID;
@@ -12,7 +13,7 @@ import java.util.Set;
 
 import static org.junit.jupiter.api.Assertions.*;
 
-public class VideoTest {
+public class VideoTest extends UnitTest {
     @Test
     public void givenValidParams_whenCallNewVideo_shouldInstantiateAVideo() {
         final var expectedTitle = "System design";

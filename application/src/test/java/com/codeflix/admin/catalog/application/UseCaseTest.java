@@ -2,6 +2,7 @@ package com.codeflix.admin.catalog.application;
 
 import com.codeflix.admin.catalog.domain.Identifier;
 import com.codeflix.admin.catalog.domain.category.CategoryID;
+import org.junit.jupiter.api.Tag;
 import org.junit.jupiter.api.extension.BeforeEachCallback;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.junit.jupiter.api.extension.ExtensionContext;
@@ -13,6 +14,7 @@ import java.util.Set;
 import java.util.stream.Collectors;
 
 @ExtendWith(MockitoExtension.class)
+@Tag("unitTest")
 public abstract class UseCaseTest implements BeforeEachCallback {
     @Override
     public void beforeEach(final ExtensionContext context) throws Exception {

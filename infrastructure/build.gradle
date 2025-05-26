@@ -11,6 +11,7 @@ buildscript {
 
 plugins {
     id 'java-conventions'
+    id 'jacoco-report-aggregation'
     id 'java-library'
     id 'application'
     id 'org.springframework.boot' version '3.3.5'
@@ -69,4 +70,22 @@ flyway {
     user = System.getenv("FLYWAY_USER") ?: 'root'
     password = System.getenv("FLYWAY_PASS") ?: '123456'
     cleanDisabled = false
+}
+
+testCodeCoverageReport {
+    reports {
+        xml {
+            enabled true
+            destination file("$rootDir/build/reports/jacoco/test/jacocoTestReport.xml")
+        }
+
+        html {
+            enabled true
+            destination file("$rootDir/build/reports/jacoco/test/")
+        }
+    }
+}
+
+tasks.named("jacocoTestReport") {
+    dependsOn tasks.named("testCodeCoverageReport", JacocoReport)
 }
