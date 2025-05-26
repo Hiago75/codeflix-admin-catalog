@@ -7,6 +7,8 @@ import com.codeflix.admin.catalog.application.video.create.CreateVideoUseCase;
 import com.codeflix.admin.catalog.application.video.delete.DeleteVideoUseCase;
 import com.codeflix.admin.catalog.application.video.retrieve.get.GetVideoByIdUseCase;
 import com.codeflix.admin.catalog.application.video.retrieve.get.VideoOutput;
+import com.codeflix.admin.catalog.application.video.retrieve.list.ListVideosUseCase;
+import com.codeflix.admin.catalog.application.video.retrieve.list.VideoListOutput;
 import com.codeflix.admin.catalog.application.video.update.UpdateVideoCommand;
 import com.codeflix.admin.catalog.application.video.update.UpdateVideoOutput;
 import com.codeflix.admin.catalog.application.video.update.UpdateVideoUseCase;
@@ -14,9 +16,8 @@ import com.codeflix.admin.catalog.domain.Fixture;
 import com.codeflix.admin.catalog.domain.castmember.CastMemberID;
 import com.codeflix.admin.catalog.domain.category.CategoryID;
 import com.codeflix.admin.catalog.domain.genre.GenreID;
-import com.codeflix.admin.catalog.domain.video.Video;
-import com.codeflix.admin.catalog.domain.video.VideoID;
-import com.codeflix.admin.catalog.domain.video.VideoMediaType;
+import com.codeflix.admin.catalog.domain.pagination.Pagination;
+import com.codeflix.admin.catalog.domain.video.*;
 import com.codeflix.admin.catalog.infrastructure.video.models.CreateVideoRequest;
 import com.codeflix.admin.catalog.infrastructure.video.models.UpdateVideoRequest;
 import org.junit.jupiter.api.Test;
@@ -30,10 +31,12 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 
 import java.time.Year;
 import java.util.ArrayList;
+import java.util.List;
 import java.util.Set;
 
 import static com.codeflix.admin.catalog.domain.utils.CollectionUtils.mapTo;
 import static org.hamcrest.Matchers.equalTo;
+import static org.hamcrest.Matchers.hasSize;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.*;
@@ -62,6 +65,9 @@ class VideoAPITest {
 
     @MockBean
     private DeleteVideoUseCase deleteVideoUseCase;
+
+    @MockBean
+    private ListVideosUseCase listVideosUseCase;
 
     @Test
     public void givenAValidCommand_whenCallsCreateFull_shouldReturnAnId() throws Exception {
@@ -389,5 +395,65 @@ class VideoAPITest {
         response.andExpect(status().isNoContent());
 
         verify(deleteVideoUseCase).execute(eq(expectedId.getValue()));
+    }
+
+    @Test
+    public void givenValidParams_whenCallsListVideos_shouldReturnPagination() throws Exception {
+        final var aVideo = new VideoPreview(Fixture.video());
+
+        final var expectedPage = 50;
+        final var expectedPerPage = 50;
+        final var expectedTerms = "Algo";
+        final var expectedSort = "title";
+        final var expectedDirection = "asc";
+        final var expectedCastMembers = "cast1";
+        final var expectedGenres = "gen1";
+        final var expectedCategories = "cat1";
+
+        final var expectedItemsCount = 1;
+        final var expectedTotal = 1;
+
+        final var expectedItems = List.of(VideoListOutput.from(aVideo));
+
+        when(listVideosUseCase.execute(any()))
+                .thenReturn(new Pagination<>(expectedPage, expectedPerPage, expectedTotal, expectedItems));
+
+        final var aRequest = get("/videos")
+                .queryParam("page", String.valueOf(expectedPage))
+                .queryParam("perPage", String.valueOf(expectedPerPage))
+                .queryParam("sort", expectedSort)
+                .queryParam("dir", expectedDirection)
+                .queryParam("search", expectedTerms)
+                .queryParam("cast_members_ids", expectedCastMembers)
+                .queryParam("categories_ids", expectedCategories)
+                .queryParam("genres_ids", expectedGenres)
+                .accept(MediaType.APPLICATION_JSON);
+
+        final var response = this.mvc.perform(aRequest);
+
+        response.andExpect(status().isOk())
+                .andExpect(jsonPath("$.current_page", equalTo(expectedPage)))
+                .andExpect(jsonPath("$.per_page", equalTo(expectedPerPage)))
+                .andExpect(jsonPath("$.total", equalTo(expectedTotal)))
+                .andExpect(jsonPath("$.items", hasSize(expectedItemsCount)))
+                .andExpect(jsonPath("$.items[0].id", equalTo(aVideo.id())))
+                .andExpect(jsonPath("$.items[0].title", equalTo(aVideo.title())))
+                .andExpect(jsonPath("$.items[0].description", equalTo(aVideo.description())))
+                .andExpect(jsonPath("$.items[0].created_at", equalTo(aVideo.createdAt().toString())))
+                .andExpect(jsonPath("$.items[0].updated_at", equalTo(aVideo.updatedAt().toString())));
+
+        final var captor = ArgumentCaptor.forClass(VideoSearchQuery.class);
+
+        verify(listVideosUseCase).execute(captor.capture());
+
+        final var actualQuery = captor.getValue();
+        assertEquals(expectedPage, actualQuery.page());
+        assertEquals(expectedPerPage, actualQuery.perPage());
+        assertEquals(expectedDirection, actualQuery.direction());
+        assertEquals(expectedSort, actualQuery.sort());
+        assertEquals(expectedTerms, actualQuery.terms());
+        assertEquals(Set.of(CategoryID.from(expectedCategories)), actualQuery.categories());
+        assertEquals(Set.of(CastMemberID.from(expectedCastMembers)), actualQuery.castMembers());
+        assertEquals(Set.of(GenreID.from(expectedGenres)), actualQuery.genres());
     }
 }

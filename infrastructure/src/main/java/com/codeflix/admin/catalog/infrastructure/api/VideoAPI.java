@@ -1,7 +1,9 @@
 package com.codeflix.admin.catalog.infrastructure.api;
 
+import com.codeflix.admin.catalog.domain.pagination.Pagination;
 import com.codeflix.admin.catalog.infrastructure.video.models.CreateVideoRequest;
 import com.codeflix.admin.catalog.infrastructure.video.models.UpdateVideoRequest;
+import com.codeflix.admin.catalog.infrastructure.video.models.VideoListResponse;
 import com.codeflix.admin.catalog.infrastructure.video.models.VideoResponse;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
@@ -18,6 +20,25 @@ import java.util.Set;
 @RequestMapping(value = "videos")
 @Tag(name = "video")
 public interface VideoAPI {
+
+    @GetMapping(produces = MediaType.APPLICATION_JSON_VALUE)
+    @Operation(summary = "List all videos paginated")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "Videos listed"),
+            @ApiResponse(responseCode = "422", description = "A query param was invalid"),
+            @ApiResponse(responseCode = "500", description = "An internal server error was thrown"),
+    })
+    Pagination<VideoListResponse> list(
+            @RequestParam(name = "search", required = false, defaultValue = "") String search,
+            @RequestParam(name = "page", required = false, defaultValue = "0") int page,
+            @RequestParam(name = "perPage", required = false, defaultValue = "25") int perPage,
+            @RequestParam(name = "sort", required = false, defaultValue = "title") String sort,
+            @RequestParam(name = "dir", required = false, defaultValue = "asc") String direction,
+            @RequestParam(name = "cast_members_ids", required = false, defaultValue = "") Set<String> castMembers,
+            @RequestParam(name = "categories_ids", required = false, defaultValue = "") Set<String> categories,
+            @RequestParam(name = "genres_ids", required = false, defaultValue = "") Set<String> genres
+    );
+
     @PostMapping(
             consumes = MediaType.MULTIPART_FORM_DATA_VALUE,
             produces = MediaType.APPLICATION_JSON_VALUE

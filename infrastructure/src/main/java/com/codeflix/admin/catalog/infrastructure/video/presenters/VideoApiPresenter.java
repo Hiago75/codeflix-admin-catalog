@@ -1,7 +1,9 @@
 package com.codeflix.admin.catalog.infrastructure.video.presenters;
 
 import com.codeflix.admin.catalog.application.video.retrieve.get.VideoOutput;
+import com.codeflix.admin.catalog.application.video.retrieve.list.VideoListOutput;
 import com.codeflix.admin.catalog.application.video.update.UpdateVideoOutput;
+import com.codeflix.admin.catalog.domain.pagination.Pagination;
 import com.codeflix.admin.catalog.domain.video.AudioVideoMedia;
 import com.codeflix.admin.catalog.domain.video.ImageMedia;
 import com.codeflix.admin.catalog.infrastructure.video.models.*;
@@ -58,5 +60,19 @@ public interface VideoApiPresenter {
 
     static UpdateVideoResponse present(final UpdateVideoOutput output) {
         return new UpdateVideoResponse(output.id());
+    }
+
+    static VideoListResponse present(final VideoListOutput output) {
+        return new VideoListResponse(
+                output.id(),
+                output.title(),
+                output.description(),
+                output.createdAt(),
+                output.updatedAt()
+        );
+    }
+
+    static Pagination<VideoListResponse> present(final Pagination<VideoListOutput> page) {
+        return page.map(VideoApiPresenter::present);
     }
 }
