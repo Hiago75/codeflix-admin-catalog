@@ -6,7 +6,7 @@ plugins {
 group = 'com.codeflix.admin.catalog.domain'
 
 dependencies {
-    testImplementation("net.datafaker:datafaker:2.4.2")
+    testImplementation("net.datafaker:datafaker:2.4.3")
 }
 
 configurations {
