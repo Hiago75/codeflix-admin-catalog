@@ -52,7 +52,10 @@ public class Resource extends ValueObject {
     public boolean equals(Object o) {
         if (o == null || getClass() != o.getClass()) return false;
         Resource resource = (Resource) o;
-        return Objects.equals(checksum, resource.checksum) && Objects.deepEquals(content, resource.content) && Objects.equals(contentType, resource.contentType) && Objects.equals(name, resource.name);
+        return Objects.equals(checksum, resource.checksum)
+                && Objects.deepEquals(content, resource.content)
+                && Objects.equals(contentType, resource.contentType)
+                && Objects.equals(name, resource.name);
     }
 
     @Override

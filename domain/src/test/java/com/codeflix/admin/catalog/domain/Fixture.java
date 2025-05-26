@@ -98,6 +98,7 @@ public final class Fixture {
         public static Genre tech() {
             return Genre.with(TECH);
         }
+
         public static Genre business() {
             return Genre.with(BUSINESS);
         }
