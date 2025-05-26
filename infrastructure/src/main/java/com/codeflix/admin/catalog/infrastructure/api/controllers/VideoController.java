@@ -6,6 +6,7 @@ import com.codeflix.admin.catalog.application.video.create.CreateVideoUseCase;
 import com.codeflix.admin.catalog.domain.resource.Resource;
 import com.codeflix.admin.catalog.infrastructure.api.VideoAPI;
 import com.codeflix.admin.catalog.infrastructure.utils.HashingUtils;
+import com.codeflix.admin.catalog.infrastructure.video.models.CreateVideoRequest;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
@@ -62,6 +63,27 @@ public class VideoController implements VideoAPI {
 
         return ResponseEntity.created(URI.create("/videos/" + output.id())).body(output);
     }
+
+    @Override
+    public ResponseEntity<?> createPartial(CreateVideoRequest payload) {
+        final var command = CreateVideoCommand.with(
+                payload.title(),
+                payload.description(),
+                payload.yearLaunched(),
+                payload.duration(),
+                payload.opened(),
+                payload.published(),
+                payload.rating(),
+                payload.categories(),
+                payload.genres(),
+                payload.castMembers()
+        );
+
+        final var output = this.createVideoUseCase.execute(command);
+
+        return ResponseEntity.created(URI.create("/videos/" + output.id())).body(output);
+    }
+
 
     private Resource resourceOf(final MultipartFile part) {
         if (part == null) {
