@@ -5,6 +5,9 @@ import com.codeflix.admin.catalog.application.video.create.CreateVideoCommand;
 import com.codeflix.admin.catalog.application.video.create.CreateVideoOutput;
 import com.codeflix.admin.catalog.application.video.create.CreateVideoUseCase;
 import com.codeflix.admin.catalog.application.video.delete.DeleteVideoUseCase;
+import com.codeflix.admin.catalog.application.video.media.get.GetMediaCommand;
+import com.codeflix.admin.catalog.application.video.media.get.GetMediaUseCase;
+import com.codeflix.admin.catalog.application.video.media.get.MediaOutput;
 import com.codeflix.admin.catalog.application.video.retrieve.get.GetVideoByIdUseCase;
 import com.codeflix.admin.catalog.application.video.retrieve.get.VideoOutput;
 import com.codeflix.admin.catalog.application.video.retrieve.list.ListVideosUseCase;
@@ -35,6 +38,7 @@ import java.util.List;
 import java.util.Set;
 
 import static com.codeflix.admin.catalog.domain.utils.CollectionUtils.mapTo;
+import static com.google.common.net.HttpHeaders.*;
 import static org.hamcrest.Matchers.equalTo;
 import static org.hamcrest.Matchers.hasSize;
 import static org.junit.jupiter.api.Assertions.assertEquals;
@@ -68,6 +72,9 @@ class VideoAPITest {
 
     @MockBean
     private ListVideosUseCase listVideosUseCase;
+
+    @MockBean
+    private GetMediaUseCase getMediaUseCase;
 
     @Test
     public void givenAValidCommand_whenCallsCreateFull_shouldReturnAnId() throws Exception {
@@ -455,5 +462,84 @@ class VideoAPITest {
         assertEquals(Set.of(CategoryID.from(expectedCategories)), actualQuery.categories());
         assertEquals(Set.of(CastMemberID.from(expectedCastMembers)), actualQuery.castMembers());
         assertEquals(Set.of(GenreID.from(expectedGenres)), actualQuery.genres());
+    }
+
+    @Test
+    public void givenEmptyParams_whenCallsListVideosWithDefaultValues_shouldReturnPagination() throws Exception {
+        final var aVideo = new VideoPreview(Fixture.video());
+
+        final var expectedPage = 0;
+        final var expectedPerPage = 25;
+        final var expectedTerms = "";
+        final var expectedSort = "title";
+        final var expectedDirection = "asc";
+
+        final var expectedItemsCount = 1;
+        final var expectedTotal = 1;
+
+        final var expectedItems = List.of(VideoListOutput.from(aVideo));
+
+        when(listVideosUseCase.execute(any()))
+                .thenReturn(new Pagination<>(expectedPage, expectedPerPage, expectedTotal, expectedItems));
+
+        final var aRequest = get("/videos")
+                .accept(MediaType.APPLICATION_JSON);
+
+        final var response = this.mvc.perform(aRequest);
+
+        response.andExpect(status().isOk())
+                .andExpect(jsonPath("$.current_page", equalTo(expectedPage)))
+                .andExpect(jsonPath("$.per_page", equalTo(expectedPerPage)))
+                .andExpect(jsonPath("$.total", equalTo(expectedTotal)))
+                .andExpect(jsonPath("$.items", hasSize(expectedItemsCount)))
+                .andExpect(jsonPath("$.items[0].id", equalTo(aVideo.id())))
+                .andExpect(jsonPath("$.items[0].title", equalTo(aVideo.title())))
+                .andExpect(jsonPath("$.items[0].description", equalTo(aVideo.description())))
+                .andExpect(jsonPath("$.items[0].created_at", equalTo(aVideo.createdAt().toString())))
+                .andExpect(jsonPath("$.items[0].updated_at", equalTo(aVideo.updatedAt().toString())));
+
+        final var captor = ArgumentCaptor.forClass(VideoSearchQuery.class);
+
+        verify(listVideosUseCase).execute(captor.capture());
+
+        final var actualQuery = captor.getValue();
+        assertEquals(expectedPage, actualQuery.page());
+        assertEquals(expectedPerPage, actualQuery.perPage());
+        assertEquals(expectedDirection, actualQuery.direction());
+        assertEquals(expectedSort, actualQuery.sort());
+        assertEquals(expectedTerms, actualQuery.terms());
+        assertTrue(actualQuery.categories().isEmpty());
+        assertTrue(actualQuery.castMembers().isEmpty());
+        assertTrue(actualQuery.genres().isEmpty());
+    }
+
+    @Test
+    public void givenAValidVideoIdAndFileType_whenCallsGetMediaById_shouldReturnContent() throws Exception {
+        final var expectedId = VideoID.unique();
+
+        final var expectedMediaType = VideoMediaType.VIDEO;
+        final var expectedResource = Fixture.Videos.resource(expectedMediaType);
+
+        final var expectedMedia = new MediaOutput(expectedResource.content(), expectedResource.contentType(), expectedResource.name());
+
+        when(getMediaUseCase.execute(any())).thenReturn(expectedMedia);
+
+        final var aRequest = get("/videos/{id}/medias/{type}", expectedId.getValue(), expectedMediaType.name());
+
+        final var response = this.mvc.perform(aRequest);
+
+        response.andExpect(status().isOk())
+                .andExpect(header().string(CONTENT_TYPE, expectedMedia.contentType()))
+                .andExpect(header().string(CONTENT_LENGTH, String.valueOf(expectedMedia.content().length)))
+                .andExpect(header().string(CONTENT_DISPOSITION, "attachment; filename=%s".formatted(expectedMedia.name())))
+                .andExpect(content().bytes(expectedMedia.content()));
+
+        final var captor = ArgumentCaptor.forClass(GetMediaCommand.class);
+
+        verify(this.getMediaUseCase).execute(captor.capture());
+
+        final var actualCmd = captor.getValue();
+        assertEquals(expectedId.getValue(), actualCmd.videoId());
+        assertEquals(expectedMediaType.name(), actualCmd.mediaType());
     }
 }
