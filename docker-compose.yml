@@ -29,4 +29,4 @@ services:
       - catalog_adm_network
 
 networks:
-  catalog_adm_network:
+  catalog_adm_network: {}
