@@ -4,6 +4,7 @@ import com.codeflix.admin.catalog.ControllerTest;
 import com.codeflix.admin.catalog.application.video.create.CreateVideoCommand;
 import com.codeflix.admin.catalog.application.video.create.CreateVideoOutput;
 import com.codeflix.admin.catalog.application.video.create.CreateVideoUseCase;
+import com.codeflix.admin.catalog.application.video.delete.DeleteVideoUseCase;
 import com.codeflix.admin.catalog.application.video.retrieve.get.GetVideoByIdUseCase;
 import com.codeflix.admin.catalog.application.video.retrieve.get.VideoOutput;
 import com.codeflix.admin.catalog.application.video.update.UpdateVideoCommand;
@@ -35,8 +36,7 @@ import static com.codeflix.admin.catalog.domain.utils.CollectionUtils.mapTo;
 import static org.hamcrest.Matchers.equalTo;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.Mockito.verify;
-import static org.mockito.Mockito.when;
+import static org.mockito.Mockito.*;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.multipart;
 import static org.wildfly.common.Assert.assertTrue;
 
@@ -59,6 +59,9 @@ class VideoAPITest {
 
     @MockBean
     private UpdateVideoUseCase updateVideoUseCase;
+
+    @MockBean
+    private DeleteVideoUseCase deleteVideoUseCase;
 
     @Test
     public void givenAValidCommand_whenCallsCreateFull_shouldReturnAnId() throws Exception {
@@ -371,5 +374,20 @@ class VideoAPITest {
         assertTrue(actualCmd.getBanner().isEmpty());
         assertTrue(actualCmd.getThumbnail().isEmpty());
         assertTrue(actualCmd.getThumbnailHalf().isEmpty());
+    }
+
+    @Test
+    public void givenAValidId_whenCallsDeleteById_shouldDeleteIt() throws Exception {
+        final var expectedId = VideoID.unique();
+
+        doNothing().when(deleteVideoUseCase).execute(any());
+
+        final var aRequest = delete("/videos/{id}", expectedId.getValue());
+
+        final var response = this.mvc.perform(aRequest);
+
+        response.andExpect(status().isNoContent());
+
+        verify(deleteVideoUseCase).execute(eq(expectedId.getValue()));
     }
 }
