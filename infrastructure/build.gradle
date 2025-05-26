@@ -10,7 +10,8 @@ buildscript {
 }
 
 plugins {
-    id 'java'
+    id 'java-conventions'
+    id 'java-library'
     id 'application'
     id 'org.springframework.boot' version '3.3.5'
     id 'io.spring.dependency-management' version '1.1.7'
@@ -18,7 +19,6 @@ plugins {
 }
 
 group = 'com.codeflix.admin.catalog.infrastructure'
-version = '1.0-SNAPSHOT'
 
 bootJar {
     archiveFileName = 'application.jar'
@@ -35,7 +35,6 @@ dependencies {
 
     implementation("com.google.cloud:google-cloud-storage:2.15.1")
     implementation("com.google.guava:guava:31.0-jre")
-    implementation('io.vavr:vavr:0.10.5')
 
     implementation('mysql:mysql-connector-java:8.0.33')
 
@@ -70,8 +69,4 @@ flyway {
     user = System.getenv("FLYWAY_USER") ?: 'root'
     password = System.getenv("FLYWAY_PASS") ?: '123456'
     cleanDisabled = false
-}
-
-test {
-    useJUnitPlatform()
 }

@@ -1,26 +1,12 @@
 plugins {
-    id 'java'
+    id 'java-conventions'
+    id 'java-library'
 }
 
 group = 'com.codeflix.admin.catalog.application'
-version = '1.0-SNAPSHOT'
-
-repositories {
-    mavenCentral()
-}
 
 dependencies {
-    implementation 'io.vavr:vavr:0.10.5'
     implementation(project(":domain"))
 
     testImplementation(project(path: ':domain', configuration: 'testClasses'))
-
-    testImplementation platform('org.junit:junit-bom:5.10.0')
-    testImplementation 'org.mockito:mockito-junit-jupiter:5.15.2'
-
-    testImplementation 'org.junit.jupiter:junit-jupiter'
-}
-
-test {
-    useJUnitPlatform()
 }
