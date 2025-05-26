@@ -1,6 +1,7 @@
 package com.codeflix.admin.catalog.infrastructure.video.presenters;
 
 import com.codeflix.admin.catalog.application.video.retrieve.get.VideoOutput;
+import com.codeflix.admin.catalog.application.video.update.UpdateVideoOutput;
 import com.codeflix.admin.catalog.domain.video.AudioVideoMedia;
 import com.codeflix.admin.catalog.domain.video.ImageMedia;
 import com.codeflix.admin.catalog.infrastructure.video.models.*;
@@ -53,5 +54,9 @@ public interface VideoApiPresenter {
                 image.name(),
                 image.location()
         );
+    }
+
+    static UpdateVideoResponse present(final UpdateVideoOutput output) {
+        return new UpdateVideoResponse(output.id());
     }
 }

@@ -6,6 +6,9 @@ import com.codeflix.admin.catalog.application.video.create.CreateVideoOutput;
 import com.codeflix.admin.catalog.application.video.create.CreateVideoUseCase;
 import com.codeflix.admin.catalog.application.video.retrieve.get.GetVideoByIdUseCase;
 import com.codeflix.admin.catalog.application.video.retrieve.get.VideoOutput;
+import com.codeflix.admin.catalog.application.video.update.UpdateVideoCommand;
+import com.codeflix.admin.catalog.application.video.update.UpdateVideoOutput;
+import com.codeflix.admin.catalog.application.video.update.UpdateVideoUseCase;
 import com.codeflix.admin.catalog.domain.Fixture;
 import com.codeflix.admin.catalog.domain.castmember.CastMemberID;
 import com.codeflix.admin.catalog.domain.category.CategoryID;
@@ -14,6 +17,7 @@ import com.codeflix.admin.catalog.domain.video.Video;
 import com.codeflix.admin.catalog.domain.video.VideoID;
 import com.codeflix.admin.catalog.domain.video.VideoMediaType;
 import com.codeflix.admin.catalog.infrastructure.video.models.CreateVideoRequest;
+import com.codeflix.admin.catalog.infrastructure.video.models.UpdateVideoRequest;
 import org.junit.jupiter.api.Test;
 import org.mockito.ArgumentCaptor;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -52,6 +56,9 @@ class VideoAPITest {
 
     @MockBean
     private GetVideoByIdUseCase getVideoByIdUseCase;
+
+    @MockBean
+    private UpdateVideoUseCase updateVideoUseCase;
 
     @Test
     public void givenAValidCommand_whenCallsCreateFull_shouldReturnAnId() throws Exception {
@@ -296,5 +303,73 @@ class VideoAPITest {
                 .andExpect(jsonPath("$.categories_id", equalTo(new ArrayList(expectedCategories))))
                 .andExpect(jsonPath("$.genres_id", equalTo(new ArrayList(expectedGenres))))
                 .andExpect(jsonPath("$.cast_members_id", equalTo(new ArrayList(expectedMembers))));
+    }
+
+    @Test
+    public void givenAValidCommand_whenCallsUpdateVideo_shouldReturnVideoId() throws Exception {
+        final var janeDoe = Fixture.CastMembers.janeDoe();
+        final var documentary = Fixture.Categories.documentary();
+        final var tech = Fixture.Genres.tech();
+
+        final var expectedId = VideoID.unique();
+        final var expectedTitle = Fixture.title();
+        final var expectedDescription = Fixture.Videos.description();
+        final var expectedLaunchYear = Year.of(Fixture.year());
+        final var expectedDuration = Fixture.duration();
+        final var expectedOpened = Fixture.bool();
+        final var expectedPublished = Fixture.bool();
+        final var expectedRating = Fixture.Videos.rating();
+        final var expectedCategories = Set.of(documentary.getId().getValue());
+        final var expectedGenres = Set.of(tech.getId().getValue());
+        final var expectedMembers = Set.of(janeDoe.getId().getValue());
+
+        final var aCmd = new UpdateVideoRequest(
+                expectedTitle,
+                expectedDescription,
+                expectedDuration,
+                expectedLaunchYear.getValue(),
+                expectedOpened,
+                expectedPublished,
+                expectedRating.getName(),
+                expectedMembers,
+                expectedCategories,
+                expectedGenres
+        );
+
+        when(updateVideoUseCase.execute(any()))
+                .thenReturn(new UpdateVideoOutput(expectedId.getValue()));
+
+        final var aRequest = put("/videos/{id}", expectedId.getValue())
+                .accept(MediaType.APPLICATION_JSON)
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(mapper.writeValueAsString(aCmd));
+
+        this.mvc.perform(aRequest)
+                .andExpect(status().isOk())
+                .andExpect(header().string("Location", "/videos/" + expectedId.getValue()))
+                .andExpect(header().string("Content-Type", MediaType.APPLICATION_JSON_VALUE))
+                .andExpect(jsonPath("$.id", equalTo(expectedId.getValue())));
+
+        final var cmdCaptor = ArgumentCaptor.forClass(UpdateVideoCommand.class);
+
+        verify(updateVideoUseCase).execute(cmdCaptor.capture());
+
+        final var actualCmd = cmdCaptor.getValue();
+
+        assertEquals(expectedTitle, actualCmd.title());
+        assertEquals(expectedDescription, actualCmd.description());
+        assertEquals(expectedLaunchYear.getValue(), actualCmd.launchedAt());
+        assertEquals(expectedDuration, actualCmd.duration());
+        assertEquals(expectedOpened, actualCmd.opened());
+        assertEquals(expectedPublished, actualCmd.published());
+        assertEquals(expectedRating.getName(), actualCmd.rating());
+        assertEquals(expectedCategories, actualCmd.categories());
+        assertEquals(expectedGenres, actualCmd.genres());
+        assertEquals(expectedMembers, actualCmd.members());
+        assertTrue(actualCmd.getVideo().isEmpty());
+        assertTrue(actualCmd.getTrailer().isEmpty());
+        assertTrue(actualCmd.getBanner().isEmpty());
+        assertTrue(actualCmd.getThumbnail().isEmpty());
+        assertTrue(actualCmd.getThumbnailHalf().isEmpty());
     }
 }
