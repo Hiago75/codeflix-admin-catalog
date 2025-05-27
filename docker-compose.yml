@@ -2,7 +2,7 @@ version: '3.7'
 
 services:
   app:
-    container_name: adm_videos_app
+    container_name: catalog_adm_app
     build: .
     profiles: ["app"]
     restart: unless-stopped
@@ -30,7 +30,7 @@ services:
       - catalog_adm_network
 
   rabbit:
-    container_name: adm_videos_rabbitmq
+    container_name: catalog_adm_rabbitmq
     image: rabbitmq:3-management
     environment:
       - RABBITMQ_ERLANG_COOKIE=SWQOKODSQALRPCLNMEQG
@@ -40,6 +40,19 @@ services:
     ports:
       - 15672:15672
       - 5672:5672
+    networks:
+      - catalog_adm_network
+
+  keycloak:
+    container_name: catalog_adm_keycloak
+    image: quay.io/keycloak/keycloak
+    environment:
+      - KC_BOOTSTRAP_ADMIN_USERNAME=admin
+      - KC_BOOTSTRAP_ADMIN_PASSWORD=admin
+    ports:
+      - 8443:8080
+    command:
+      - start-dev
     networks:
       - catalog_adm_network
 
