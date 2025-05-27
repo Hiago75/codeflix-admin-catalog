@@ -45,6 +45,8 @@ services:
 
   keycloak:
     container_name: catalog_adm_keycloak
+    volumes:
+      - .local/keycloak/:/opt/keycloak/data
     image: quay.io/keycloak/keycloak
     environment:
       - KC_BOOTSTRAP_ADMIN_USERNAME=admin

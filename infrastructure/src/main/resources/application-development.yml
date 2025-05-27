@@ -6,6 +6,10 @@ amqp:
   username: adm_videos
   password: 123456
 
+keycloak:
+  host: http://localhost:8443
+  realm: fc3-codeflix
+
 mysql:
   username: root
   password: 123456

@@ -3,6 +3,10 @@ spring:
     exclude:
       - org.springframework.boot.autoconfigure.amqp.RabbitAutoConfiguration
 
+keycloak:
+  host: test
+  realm: http://test:8443
+
   datasource:
     driver-class-name: org.h2.Driver
     username: root
