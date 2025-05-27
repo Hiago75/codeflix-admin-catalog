@@ -1,5 +1,6 @@
 package com.codeflix.admin.catalog.infrastructure.api;
 
+import com.codeflix.admin.catalog.APITest;
 import com.codeflix.admin.catalog.ControllerTest;
 import com.codeflix.admin.catalog.application.genre.create.CreateGenreOutput;
 import com.codeflix.admin.catalog.application.genre.create.CreateGenreUseCase;
@@ -23,8 +24,8 @@ import com.codeflix.admin.catalog.infrastructure.genre.models.UpdateGenreRequest
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.http.MediaType;
+import org.springframework.test.context.bean.override.mockito.MockitoBean;
 import org.springframework.test.web.servlet.MockMvc;
 
 import java.util.List;
@@ -47,19 +48,19 @@ public class GenreAPITest {
     @Autowired
     private ObjectMapper mapper;
 
-    @MockBean
+    @MockitoBean
     private CreateGenreUseCase createGenreUseCase;
 
-    @MockBean
+    @MockitoBean
     private GetGenreByIdUseCase getGenreByIdUseCase;
 
-    @MockBean
+    @MockitoBean
     private UpdateGenreUseCase updateGenreUseCase;
 
-    @MockBean
+    @MockitoBean
     private DeleteGenreUseCase deleteGenreUseCase;
 
-    @MockBean
+    @MockitoBean
     private ListGenreUseCase listGenreUseCase;
 
     @Test
@@ -75,6 +76,7 @@ public class GenreAPITest {
                 .thenReturn(CreateGenreOutput.from(expectedId));
 
         final var request = post("/genres")
+                .with(APITest.CATEGORIZATION_JWT)
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(this.mapper.writeValueAsString(anApiInput));
 
@@ -104,6 +106,7 @@ public class GenreAPITest {
                 .thenThrow(new NotificationException("Error", Notification.create(new Error(expectedError))));
 
         final var request = post("/genres")
+                .with(APITest.CATEGORIZATION_JWT)
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(this.mapper.writeValueAsString(anApiInput));
 
@@ -140,6 +143,7 @@ public class GenreAPITest {
                 .thenReturn(GenreOutput.from(aGenre));
 
         final var request = get("/genres/{id}", expectedId)
+                .with(APITest.CATEGORIZATION_JWT)
                 .accept(MediaType.APPLICATION_JSON)
                 .contentType(MediaType.APPLICATION_JSON);
 
@@ -166,6 +170,7 @@ public class GenreAPITest {
                 .thenThrow(NotFoundException.with(Genre.class, expectedId));
 
         final var request = get("/genres/{id}", expectedId.getValue())
+                .with(APITest.CATEGORIZATION_JWT)
                 .accept(MediaType.APPLICATION_JSON)
                 .contentType(MediaType.APPLICATION_JSON);
 
@@ -194,6 +199,7 @@ public class GenreAPITest {
                 .thenReturn(UpdateGenreOutput.from(aGenre));
 
         final var aRequest = put("/genres/{id}", expectedId)
+                .with(APITest.CATEGORIZATION_JWT)
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(this.mapper.writeValueAsString(aCommand));
 
@@ -227,6 +233,7 @@ public class GenreAPITest {
                 .thenThrow(new NotificationException("Error", Notification.create(new Error(expectedErrorMessage))));
 
         final var aRequest = put("/genres/{id}", expectedId)
+                .with(APITest.CATEGORIZATION_JWT)
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(this.mapper.writeValueAsString(aCommand));
 
@@ -250,7 +257,8 @@ public class GenreAPITest {
 
         doNothing().when(deleteGenreUseCase).execute(any());
 
-        final var request = delete("/genres/{id}", expectedId);
+        final var request = delete("/genres/{id}", expectedId)
+            .with(APITest.CATEGORIZATION_JWT);
 
         final var response = this.mvc.perform(request);
 
@@ -278,6 +286,7 @@ public class GenreAPITest {
                 .thenReturn(new Pagination<>(expectedPage, expectedPerPage, expectedTotal, expectedItems));
 
         final var request = get("/genres")
+                .with(APITest.CATEGORIZATION_JWT)
                 .queryParam("page", String.valueOf(expectedPage))
                 .queryParam("perPage", String.valueOf(expectedPerPage))
                 .queryParam("sort", expectedSort)

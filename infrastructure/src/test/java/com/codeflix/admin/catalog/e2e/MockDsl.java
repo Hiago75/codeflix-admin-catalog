@@ -1,5 +1,6 @@
 package com.codeflix.admin.catalog.e2e;
 
+import com.codeflix.admin.catalog.APITest;
 import com.codeflix.admin.catalog.domain.Identifier;
 import com.codeflix.admin.catalog.domain.castmember.CastMemberID;
 import com.codeflix.admin.catalog.domain.castmember.CastMemberType;
@@ -30,8 +31,8 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 public interface MockDsl {
     MockMvc mvc();
 
-    default ResultActions deleteACategory(final Identifier anId) throws Exception {
-        return this.delete("/categories", anId);
+    default void deleteACategory(final Identifier anId) throws Exception {
+        this.delete("/categories", anId);
     }
 
     default CategoryID givenACategory(final String aName, final String aDescription, final boolean isActive) throws Exception {
@@ -115,14 +116,6 @@ public interface MockDsl {
         return this.givenResult("/cast_members", aRequestBody);
     }
 
-    private ResultActions givenResult(final String url, final Object body) throws Exception {
-        final var aRequest = post(url)
-                .contentType(MediaType.APPLICATION_JSON)
-                .content(Json.writeValueAsString(body));
-
-        return this.mvc().perform(aRequest);
-    }
-
     default ResultActions listCastMembers(final int page, final int perPage) throws Exception {
         return listCastMembers(page, perPage, "", "", "");
     }
@@ -147,9 +140,18 @@ public interface MockDsl {
         return this.update("/cast_members/", anId, new UpdateCastMemberRequest(aName, aType));
     }
 
+    private ResultActions givenResult(final String url, final Object body) throws Exception {
+        final var aRequest = post(url)
+                .with(APITest.ADMIN_JWT)
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(Json.writeValueAsString(body));
+
+        return this.mvc().perform(aRequest);
+    }
 
     private String given(final String url, final Object body) throws Exception {
         final var aRequest = post(url)
+                .with(APITest.ADMIN_JWT)
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(Json.writeValueAsString(body));
 
@@ -169,6 +171,7 @@ public interface MockDsl {
             final String directions
     ) throws Exception {
         final var aRequest = MockMvcRequestBuilders.get("%s".formatted(url))
+                .with(APITest.ADMIN_JWT)
                 .queryParam("page", String.valueOf(page))
                 .queryParam("perPage", String.valueOf(perPage))
                 .queryParam("search", search)
@@ -179,7 +182,8 @@ public interface MockDsl {
     }
 
     private <T> T retrieve(final String url, final Identifier anId, final  Class<T> clazz) throws Exception {
-        final var aRequest = MockMvcRequestBuilders.get("%s/".formatted(url) + anId.getValue())
+        final var aRequest = get("%s/".formatted(url) + anId.getValue())
+                .with(APITest.ADMIN_JWT)
                 .accept(MediaType.APPLICATION_JSON_UTF8)
                 .contentType(MediaType.APPLICATION_JSON_UTF8);
 
@@ -193,6 +197,7 @@ public interface MockDsl {
 
     private ResultActions retrieveResult(final String url, final Identifier anId) throws Exception {
         final var aRequest = get(url + anId.getValue())
+                .with(APITest.ADMIN_JWT)
                 .accept(MediaType.APPLICATION_JSON_UTF8)
                 .contentType(MediaType.APPLICATION_JSON_UTF8);
 
@@ -201,6 +206,7 @@ public interface MockDsl {
 
     private ResultActions delete(final String url, final Identifier anid) throws Exception {
         final var aRequest = MockMvcRequestBuilders.delete("%s/".formatted(url) + anid.getValue())
+                .with(APITest.ADMIN_JWT)
                 .contentType(MediaType.APPLICATION_JSON);
 
         return this.mvc().perform(aRequest);
@@ -209,6 +215,7 @@ public interface MockDsl {
     private ResultActions update(final String url, final Identifier anId, final Object body) throws Exception {
         return  this.mvc().perform(
                 MockMvcRequestBuilders.put("%s/".formatted(url) + anId.getValue())
+                .with(APITest.ADMIN_JWT)
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(Json.writeValueAsString(body))
         );

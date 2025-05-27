@@ -1,5 +1,6 @@
 package com.codeflix.admin.catalog.infrastructure.api;
 
+import com.codeflix.admin.catalog.APITest;
 import com.codeflix.admin.catalog.ControllerTest;
 import com.codeflix.admin.catalog.domain.Fixture;
 import com.codeflix.admin.catalog.application.castmember.create.CreateCastMemberOutput;
@@ -21,8 +22,9 @@ import com.codeflix.admin.catalog.domain.validation.Error;
 import com.codeflix.admin.catalog.infrastructure.castmember.models.CreateCastMemberRequest;
 import com.codeflix.admin.catalog.infrastructure.castmember.models.UpdateCastMemberRequest;
 import org.junit.jupiter.api.Test;
+import org.mockito.Mock;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.mock.mockito.MockBean;
+import org.springframework.test.context.bean.override.mockito.MockitoBean;
 import org.springframework.test.web.servlet.MockMvc;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.testcontainers.shaded.com.github.dockerjava.core.MediaType;
@@ -45,19 +47,19 @@ public class CastMemberAPITest {
     @Autowired
     private ObjectMapper mapper;
 
-    @MockBean
+    @MockitoBean
     private DefaultCreateCastMemberUseCase createCastMemberUseCase;
 
-    @MockBean
+    @MockitoBean
     private DefaultDeleteCastMemberUseCase deleteCastMemberUseCase;
 
-    @MockBean
+    @MockitoBean
     private DefaultUpdateCastMemberUseCase updateCastMemberUseCase;
 
-    @MockBean
+    @MockitoBean
     private DefaultGetCastMemberByIdUseCase getCastMemberByIdUseCase;
 
-    @MockBean
+    @MockitoBean
     private DefaultListCastMembersUseCase listCastMembersUseCase;
 
     @Test
@@ -73,6 +75,7 @@ public class CastMemberAPITest {
                 .thenReturn(CreateCastMemberOutput.from(expectedId));
 
         final var aRequest = post("/cast_members")
+                .with(APITest.VIDEOS_JWT)
                 .contentType(MediaType.APPLICATION_JSON.getMediaType())
                 .content(mapper.writeValueAsString(aCommand));
 
@@ -104,6 +107,7 @@ public class CastMemberAPITest {
                 .thenThrow(NotificationException.with(new Error(expectedErrorMessage)));
 
         final var aRequest = post("/cast_members")
+                .with(APITest.VIDEOS_JWT)
                 .contentType(MediaType.APPLICATION_JSON.getMediaType())
                 .content(mapper.writeValueAsString(aCommand));
 
@@ -134,6 +138,7 @@ public class CastMemberAPITest {
                 .thenReturn(CastMemberOutput.from(aMember));
 
         final var aRequest = get("/cast_members/{id}", expectedId)
+                .with(APITest.VIDEOS_JWT)
                 .accept(MediaType.APPLICATION_JSON.getMediaType());
 
         final var response = this.mvc.perform(aRequest);
@@ -158,6 +163,7 @@ public class CastMemberAPITest {
                 .thenThrow(NotFoundException.with(CastMember.class, expectedId));
 
         final var aRequest = get("/cast_members/{id}", expectedId.getValue())
+                .with(APITest.VIDEOS_JWT)
                 .accept(MediaType.APPLICATION_JSON.getMediaType());
 
         final var response = this.mvc.perform(aRequest);
@@ -184,6 +190,7 @@ public class CastMemberAPITest {
                 .thenReturn(UpdateCastMemberOutput.from(expectedId));
 
         final var aRequest = put("/cast_members/{id}", expectedId.getValue())
+                .with(APITest.VIDEOS_JWT)
                 .contentType(MediaType.APPLICATION_JSON.getMediaType())
                 .content(mapper.writeValueAsString(aCommand));
 
@@ -218,6 +225,7 @@ public class CastMemberAPITest {
                 .thenThrow(NotificationException.with(new Error(expectedErrorMessage)));
 
         final var aRequest = put("/cast_members/{id}", expectedId.getValue())
+                .with(APITest.VIDEOS_JWT)
                 .contentType(MediaType.APPLICATION_JSON.getMediaType())
                 .content(mapper.writeValueAsString(aCommand));
 
@@ -253,6 +261,7 @@ public class CastMemberAPITest {
                 .thenThrow(NotFoundException.with(CastMember.class, expectedId));
 
         final var aRequest = put("/cast_members/{id}", expectedId.getValue())
+                .with(APITest.VIDEOS_JWT)
                 .contentType(MediaType.APPLICATION_JSON.getMediaType())
                 .content(mapper.writeValueAsString(aCommand));
 
@@ -277,7 +286,8 @@ public class CastMemberAPITest {
 
         doNothing().when(deleteCastMemberUseCase).execute(any());
 
-        final var aRequest = delete("/cast_members/{id}", expectedId);
+        final var aRequest = delete("/cast_members/{id}", expectedId)
+                .with(APITest.VIDEOS_JWT);
 
         final var response = this.mvc.perform(aRequest);
 
@@ -305,6 +315,7 @@ public class CastMemberAPITest {
                 .thenReturn(new Pagination<>(expectedPage, expectedPerPage, expectedTotal, expectedItems));
 
         final var aRequest = get("/cast_members")
+                .with(APITest.VIDEOS_JWT)
                 .queryParam("page", String.valueOf(expectedPage))
                 .queryParam("perPage", String.valueOf(expectedPerPage))
                 .queryParam("search", expectedTerms)
@@ -352,6 +363,7 @@ public class CastMemberAPITest {
                 .thenReturn(new Pagination<>(expectedPage, expectedPerPage, expectedTotal, expectedItems));
 
         final var aRequest = get("/cast_members")
+                .with(APITest.VIDEOS_JWT)
                 .accept(MediaType.APPLICATION_JSON.getMediaType());
 
         final var response = this.mvc.perform(aRequest);

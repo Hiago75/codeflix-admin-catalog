@@ -2,17 +2,16 @@ spring:
   autoconfigure:
     exclude:
       - org.springframework.boot.autoconfigure.amqp.RabbitAutoConfiguration
-
-keycloak:
-  host: test
-  realm: http://test:8443
-
   datasource:
     driver-class-name: org.h2.Driver
     username: root
     password: 123456
     url: jdbc:h2:mem:catalog_adm_test;MODE=MYSQL;DATABASE_TO_LOWER=TRUE
-  h2:
-    console:
-      enabled: true
-      path: /h2
+    h2:
+      console:
+        enabled: true
+        path: /h2
+
+keycloak:
+  host: test
+  realm: http://test:8443

@@ -1,5 +1,6 @@
 package com.codeflix.admin.catalog.e2e.category;
 
+import com.codeflix.admin.catalog.APITest;
 import com.codeflix.admin.catalog.E2ETest;
 import com.codeflix.admin.catalog.e2e.MockDsl;
 import com.codeflix.admin.catalog.infrastructure.category.models.UpdateCategoryRequest;
@@ -168,7 +169,7 @@ public class CategoryE2ETest implements MockDsl {
         assertTrue(MYSQL_CONTAINER.isRunning());
         assertEquals(0, categoryRepository.count());
 
-        final var aRequest = MockMvcRequestBuilders.get("/categories/123");
+        final var aRequest = MockMvcRequestBuilders.get("/categories/123").with(APITest.CATEGORIZATION_JWT);
 
         this.mvc.perform(aRequest)
                 .andExpect(status().isNotFound())
@@ -189,6 +190,7 @@ public class CategoryE2ETest implements MockDsl {
         final var aRequestBody = new UpdateCategoryRequest(expectedName, expectedDescription, expectedIsActive);
 
         final var aRequest = MockMvcRequestBuilders.put("/categories/" + actualId.getValue())
+                .with(APITest.CATEGORIZATION_JWT)
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(Json.writeValueAsString(aRequestBody));
 
@@ -219,6 +221,7 @@ public class CategoryE2ETest implements MockDsl {
         final var aRequestBody = new UpdateCategoryRequest(expectedName, expectedDescription, expectedIsActive);
 
         final var aRequest = MockMvcRequestBuilders.put("/categories/" + actualId.getValue())
+                .with(APITest.CATEGORIZATION_JWT)
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(Json.writeValueAsString(aRequestBody));
 

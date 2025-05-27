@@ -1,5 +1,6 @@
 package com.codeflix.admin.catalog.e2e.genre;
 
+import com.codeflix.admin.catalog.APITest;
 import com.codeflix.admin.catalog.E2ETest;
 import com.codeflix.admin.catalog.domain.category.CategoryID;
 import com.codeflix.admin.catalog.domain.genre.GenreID;
@@ -200,7 +201,7 @@ public class GenreE2ETest implements MockDsl {
         assertTrue(MYSQL_CONTAINER.isRunning());
         assertEquals(0, genreRepository.count());
 
-        final var aRequest = MockMvcRequestBuilders.get("/genres/123");
+        final var aRequest = MockMvcRequestBuilders.get("/genres/123").with(APITest.CATEGORIZATION_JWT);
 
         this.mvc.perform(aRequest)
                 .andExpect(status().isNotFound())

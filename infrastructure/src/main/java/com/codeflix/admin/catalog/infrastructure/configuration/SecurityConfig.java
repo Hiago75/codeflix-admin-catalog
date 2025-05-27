@@ -36,10 +36,10 @@ public class SecurityConfig {
         return http
                 .csrf(AbstractHttpConfigurer::disable)
                 .authorizeHttpRequests(authorize -> {
-                    authorize.requestMatchers("/categories*").hasAnyRole(ROLE_ADMIN, ROLE_CATEGORIZATION);
-                    authorize.requestMatchers("/genres*").hasAnyRole(ROLE_ADMIN, ROLE_CATEGORIZATION);
-                    authorize.requestMatchers("/videos*").hasAnyRole(ROLE_ADMIN, ROLE_VIDEOS);
-                    authorize.requestMatchers("/cast_members*").hasAnyRole(ROLE_ADMIN, ROLE_VIDEOS);
+                    authorize.requestMatchers("/categories/**").hasAnyRole(ROLE_ADMIN, ROLE_CATEGORIZATION);
+                    authorize.requestMatchers("/genres/**").hasAnyRole(ROLE_ADMIN, ROLE_CATEGORIZATION);
+                    authorize.requestMatchers("/videos/**").hasAnyRole(ROLE_ADMIN, ROLE_VIDEOS);
+                    authorize.requestMatchers("/cast_members/**").hasAnyRole(ROLE_ADMIN, ROLE_VIDEOS);
                 })
                 .oauth2ResourceServer(oauth2 -> oauth2
                         .jwt(jwt -> jwt
