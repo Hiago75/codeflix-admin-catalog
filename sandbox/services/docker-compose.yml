@@ -1,0 +1,51 @@
+version: '3.7'
+
+services:
+  mysql:
+    container_name: catalog_adm_mysql
+    image: mysql:latest
+    environment:
+      MYSQL_ROOT_PASSWORD: 123456
+      MYSQL_DATABASE: catalog_adm
+      MYSQL_ROOT_HOST: '%'
+    security_opt:
+      - seccomp:unconfined
+    ports:
+      - 3306:3306
+    networks:
+      - catalog_adm_services
+    volumes:
+      - ../.docker/mysql:/var/lib/mysql:rw
+
+  rabbit:
+    container_name: catalog_adm_rabbitmq
+    image: rabbitmq:3-management
+    environment:
+      - RABBITMQ_ERLANG_COOKIE=SWQOKODSQALRPCLNMEQG
+      - RABBITMQ_DEFAULT_USER=adm_videos
+      - RABBITMQ_DEFAULT_PASS=123456
+      - RABBITMQ_DEFAULT_VHOST=/
+    ports:
+      - 15672:15672
+      - 5672:5672
+    networks:
+      - catalog_adm_services
+
+  keycloak:
+    container_name: catalog_adm_keycloak
+    volumes:
+      - ../.docker/keycloak/:/opt/keycloak/data/h2:rw
+    image: quay.io/keycloak/keycloak
+    environment:
+      - KC_BOOTSTRAP_ADMIN_USERNAME=admin
+      - KC_BOOTSTRAP_ADMIN_PASSWORD=admin
+    ports:
+      - 8443:8080
+    command:
+      - start-dev
+    networks:
+      - catalog_adm_services
+
+networks:
+  catalog_adm_services:
+    external: true

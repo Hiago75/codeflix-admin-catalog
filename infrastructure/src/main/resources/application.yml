@@ -1,6 +1,6 @@
 amqp:
   admin:
-    auto-create: true
+    auto-create: AMQP_ADMIN_AUTO_CREATE:true}
   queues:
     video-created:
       exchange: video.events
@@ -62,13 +62,12 @@ spring:
     hibernate:
       ddl-auto: none
     properties:
-      "[hibernate.dialect]": org.hibernate.dialect.MySQLDialect
       "[hibernate.generate_statistics]": false # Troubleshooting
       "[hibernate.connection.provider_disables_autocommit]": true
   rabbitmq:
     dynamic: ${amqp.admin.auto-create}
     host: ${amqp.host}
-    port: ${amqp.port}
+    port: 5672
     username: ${amqp.username}
     password: ${amqp.password}
   servlet:
