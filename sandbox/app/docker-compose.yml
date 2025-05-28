@@ -1,33 +1,36 @@
 version: '3.7'
 
 services:
-  app:
-    container_name: catalog_adm_app
-    build: .
-    profiles: ["app"]
-    restart: unless-stopped
-    env_file:
-      - .env
-    ports:
-      - 8080:8080
-    depends_on:
-      - mysql
-      - rabbit
-    networks:
-      - catalog_adm_network
+#  app:
+#    container_name: catalog_adm_app
+#    build: .
+#    profiles: ["app"]
+#    restart: unless-stopped
+#    env_file:
+#      - .env
+#    ports:
+#      - 8080:8080
+#    depends_on:
+#      - mysql
+#      - rabbit
+#    networks:
+#      - catalog_adm_network
 
   mysql:
     container_name: catalog_adm_mysql
     image: mysql:latest
     environment:
-      - MYSQL_ROOT_PASSWORD=123456
-      - MYSQL_DATABASE=catalog_adm
+      MYSQL_ROOT_PASSWORD: 123456
+      MYSQL_DATABASE: catalog_adm
+      MYSQL_ROOT_HOST: '%'
     security_opt:
       - seccomp:unconfined
     ports:
       - 3306:3306
     networks:
       - catalog_adm_network
+    volumes:
+      - ../.docker/mysql:/var/lib/mysql:rw
 
   rabbit:
     container_name: catalog_adm_rabbitmq
@@ -46,7 +49,7 @@ services:
   keycloak:
     container_name: catalog_adm_keycloak
     volumes:
-      - .local/keycloak/:/opt/keycloak/data
+      - ../.docker/keycloak/:/opt/keycloak/data/h2:rw
     image: quay.io/keycloak/keycloak
     environment:
       - KC_BOOTSTRAP_ADMIN_USERNAME=admin

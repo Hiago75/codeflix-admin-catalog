@@ -17,7 +17,7 @@ import org.mockito.ArgumentCaptor;
 import org.springframework.amqp.rabbit.test.RabbitListenerTestHarness;
 import org.springframework.amqp.rabbit.test.TestRabbitTemplate;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.mock.mockito.MockBean;
+import org.springframework.test.context.bean.override.mockito.MockitoBean;
 
 import java.util.concurrent.TimeUnit;
 
@@ -36,7 +36,7 @@ public class VideoEncoderListenerTest {
     @Autowired
     private RabbitListenerTestHarness harness;
 
-    @MockBean
+    @MockitoBean
     private UpdateMediaStatusUseCase updateMediaStatusUseCase;
 
     @Autowired
