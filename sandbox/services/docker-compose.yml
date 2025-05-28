@@ -32,17 +32,16 @@ services:
       - catalog_adm_services
 
   keycloak:
-    container_name: catalog_adm_keycloak
+    container_name: catalog-adm-keycloak
     volumes:
       - ../.docker/keycloak/:/opt/keycloak/data/h2:rw
-    image: quay.io/keycloak/keycloak
+    image: quay.io/keycloak/keycloak:24.0.5
     environment:
-      - KC_BOOTSTRAP_ADMIN_USERNAME=admin
-      - KC_BOOTSTRAP_ADMIN_PASSWORD=admin
+      - KEYCLOAK_ADMIN=admin
+      - KEYCLOAK_ADMIN_PASSWORD=admin
     ports:
-      - 8443:8080
-    command:
-      - start-dev
+      - 8443:8443
+    command: start-dev --http-port=8443 --hostname-url=http://catalog-adm-keycloak:8443
     networks:
       - catalog_adm_services
 
