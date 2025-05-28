@@ -1,5 +1,6 @@
 package com.codeflix.admin.catalog.infrastructure.configuration;
 
+import org.springframework.context.annotation.Profile;
 import org.springframework.core.convert.converter.Converter;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -25,6 +26,7 @@ import java.util.stream.Stream;
 @Configuration
 @EnableWebSecurity
 @EnableMethodSecurity(securedEnabled = true, jsr250Enabled = true)
+@Profile({"!development"})
 public class SecurityConfig {
     public static final String ROLE_ADMIN = "CATALOG_ADMIN";
     public static final String ROLE_CATEGORIZATION = "CATALOG_ADMIN_CATEGORIZATION";
