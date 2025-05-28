@@ -4,8 +4,10 @@ import com.codeflix.admin.catalog.IntegrationTest;
 import com.codeflix.admin.catalog.domain.category.CategoryGateway;
 import com.codeflix.admin.catalog.infrastructure.category.persistance.CategoryRepository;
 import org.junit.jupiter.api.Test;
+import org.mockito.Answers;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.mock.mockito.SpyBean;
+import org.springframework.test.context.bean.override.mockito.MockitoBean;
+import org.springframework.test.context.bean.override.mockito.MockitoSpyBean;
 
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.ArgumentMatchers.any;
@@ -19,7 +21,7 @@ public class CreateCategoryUseCaseIT {
     @Autowired
     private CategoryRepository categoryRepository;
 
-    @SpyBean
+    @MockitoSpyBean
     private CategoryGateway categoryGateway;
 
     @Test

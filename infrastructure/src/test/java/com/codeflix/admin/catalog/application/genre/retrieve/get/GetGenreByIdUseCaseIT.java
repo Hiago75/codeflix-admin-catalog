@@ -9,8 +9,10 @@ import com.codeflix.admin.catalog.domain.genre.Genre;
 import com.codeflix.admin.catalog.domain.genre.GenreGateway;
 import com.codeflix.admin.catalog.domain.genre.GenreID;
 import org.junit.jupiter.api.Test;
+import org.mockito.Answers;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.mock.mockito.SpyBean;
+import org.springframework.test.context.bean.override.mockito.MockitoBean;
+import org.springframework.test.context.bean.override.mockito.MockitoSpyBean;
 
 import java.util.List;
 
@@ -24,7 +26,7 @@ public class GetGenreByIdUseCaseIT {
     @Autowired
     private GenreGateway genreGateway;
 
-    @SpyBean
+    @MockitoSpyBean
     private CategoryGateway categoryGateway;
 
     @Test

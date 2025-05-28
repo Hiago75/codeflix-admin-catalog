@@ -8,8 +8,10 @@ import com.codeflix.admin.catalog.domain.exceptions.NotificationException;
 import com.codeflix.admin.catalog.domain.genre.GenreGateway;
 import com.codeflix.admin.catalog.infrastructure.genre.persistence.GenreRepository;
 import org.junit.jupiter.api.Test;
+import org.mockito.Answers;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.mock.mockito.SpyBean;
+import org.springframework.test.context.bean.override.mockito.MockitoBean;
+import org.springframework.test.context.bean.override.mockito.MockitoSpyBean;
 
 import java.util.List;
 
@@ -25,10 +27,10 @@ public class CreateGenreUseCaseIT {
     @Autowired
     private DefaultCreateGenreUseCase useCase;
 
-    @SpyBean
+    @MockitoSpyBean
     private GenreGateway genreGateway;
 
-    @SpyBean
+    @MockitoSpyBean
     private CategoryGateway categoryGateway;
 
     @Autowired

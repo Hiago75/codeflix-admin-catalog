@@ -8,8 +8,10 @@ import com.codeflix.admin.catalog.domain.pagination.SearchQuery;
 import com.codeflix.admin.catalog.infrastructure.castmember.persistence.CastMemberJpaEntity;
 import com.codeflix.admin.catalog.infrastructure.castmember.persistence.CastMemberRepository;
 import org.junit.jupiter.api.Test;
+import org.mockito.Answers;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.mock.mockito.SpyBean;
+import org.springframework.test.context.bean.override.mockito.MockitoBean;
+import org.springframework.test.context.bean.override.mockito.MockitoSpyBean;
 
 import java.util.List;
 
@@ -26,7 +28,7 @@ public class ListCastMemberUseCaseIT {
     @Autowired
     private CastMemberRepository castMemberRepository;
 
-    @SpyBean
+    @MockitoSpyBean
     private CastMemberGateway castMemberGateway;
 
     @Test

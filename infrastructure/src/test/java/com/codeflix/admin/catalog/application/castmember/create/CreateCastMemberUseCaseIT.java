@@ -8,7 +8,7 @@ import com.codeflix.admin.catalog.domain.exceptions.NotificationException;
 import com.codeflix.admin.catalog.infrastructure.castmember.persistence.CastMemberRepository;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.mock.mockito.SpyBean;
+import org.springframework.test.context.bean.override.mockito.MockitoSpyBean;
 
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.ArgumentMatchers.any;
@@ -22,7 +22,7 @@ public class CreateCastMemberUseCaseIT {
     @Autowired
     private CastMemberRepository castMemberRepository;
 
-    @SpyBean
+    @MockitoSpyBean
     private CastMemberGateway castMemberGateway;
 
     @Test
